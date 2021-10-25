@@ -5,7 +5,8 @@ import * as Font from 'expo-font';
 import { Text, View } from 'react-native';
 import { Asset } from 'expo-asset';
 import LoggedOutNav from './navigators/LoggedOutNav';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, ThemeProvider } from '@react-navigation/native';
+import { Appearance, AppearanceProvider } from 'react-native-appearance';
 
 export default function App() {
   const [loading, setLoading] = useState();
@@ -27,6 +28,7 @@ export default function App() {
   if (loading) {
     return <AppLoading startAsync={preLoad} onFinish={onFinish} onError={console.warn} />;
   }
+
   return (
     <NavigationContainer>
       <LoggedOutNav />
