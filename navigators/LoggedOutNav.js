@@ -11,7 +11,9 @@ const LoggedOutNav = () => {
     <Stack.Navigator
       screenOptions={{
         headerBackTitleVisible: false,
-        headerTintColor: 'black',
+        headerTitle: false,
+        headerTransparent: true,
+        headerTintColor: 'white',
       }}
     >
       <Stack.Screen name="Welcome" options={{ headerShown: false }} component={Welcome} />
