@@ -28,11 +28,15 @@ const AuthLayout = ({ children }) => {
     Keyboard.dismiss();
   };
   return (
-    <TouchableWithoutFeedback style={{ flex: 1 }} onPress={dismissKeyboard}>
+    <TouchableWithoutFeedback
+      style={{ flex: 1 }}
+      onPress={dismissKeyboard}
+      disabled={Platform.OS === 'web'}
+    >
       <Container>
         <KeyboardAvoidingView
           style={{ width: '100%' }}
-          behavior="position"
+          behavior="padding"
           keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
         >
           <Logo
