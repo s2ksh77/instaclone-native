@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import TabIcon from '../components/auth/nav/TabIcon';
 import Me from '../screens/Me';
-import StackNavFactory from '../components/auth/nav/StackNavFactory';
+import SharedStackNav from './SharedStackNav';
 
 const Tabs = createBottomTabNavigator();
 
@@ -33,7 +33,7 @@ const LoggedInNav = () => {
           ),
         }}
       >
-        {() => <StackNavFactory screenName="Feed" />}
+        {() => <SharedStackNav screenName="Feed" />}
       </Tabs.Screen>
       <Tabs.Screen
         name="Search"
@@ -43,7 +43,7 @@ const LoggedInNav = () => {
           ),
         }}
       >
-        {() => <StackNavFactory screenName="Search" />}
+        {() => <SharedStackNav screenName="Search" />}
       </Tabs.Screen>
       <Tabs.Screen
         name="Camera"
@@ -62,7 +62,7 @@ const LoggedInNav = () => {
           ),
         }}
       >
-        {() => <StackNavFactory screenName="Notifications" />}
+        {() => <SharedStackNav screenName="Notifications" />}
       </Tabs.Screen>
 
       <Tabs.Screen
@@ -73,7 +73,7 @@ const LoggedInNav = () => {
           ),
         }}
       >
-        {() => <StackNavFactory screenName="Me" />}
+        {() => <SharedStackNav screenName="Me" />}
       </Tabs.Screen>
     </Tabs.Navigator>
   );
