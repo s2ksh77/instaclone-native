@@ -1,7 +1,10 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { PHOTO_FRAGMENT, COMMENT_FRAGMENT } from '../fragments';
+import { gql } from '@apollo/client';
+import ScreenLayout from '../components/ScreenLayout';
+import Photo from '../components/Photo';
 
 const FEED_QUERY = gql`
   query seeFeed {
@@ -24,19 +27,23 @@ const FEED_QUERY = gql`
 `;
 
 const Feed = () => {
-  const { data } = useQuery(FEED_QUERY);
+  const { data, loading } = useQuery(FEED_QUERY);
+
+  const renderPhoto = ({ item: photo }) => {
+    console.log(photo);
+    return <Photo {...photo} />;
+  };
 
   return (
-    <View
-      style={{
-        backgroundColor: 'black',
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text style={{ color: 'white' }}>Feed</Text>
-    </View>
+    <ScreenLayout loading={loading}>
+      <FlatList
+        style={{ width: '100%' }}
+        showsVerticalScrollIndicator={false}
+        data={data?.seeFeed}
+        keyExtractor={(photo) => '' + photo.id}
+        renderItem={renderPhoto}
+      />
+    </ScreenLayout>
   );
 };
 export default Feed;

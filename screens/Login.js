@@ -67,7 +67,7 @@ const Login = ({ route: { params } }) => {
         placeholder="Username"
         returnKeyType="next"
         placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
-        onSubmitEditing={() => onNext(lastNameRef)}
+        onSubmitEditing={() => onNext(passwordRef)}
         onChangeText={(text) => setValue('username', text)}
         autoCapitalize={'none'}
       />
