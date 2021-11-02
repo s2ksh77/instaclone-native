@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
 import { Image, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
 import { Ionicons } from '@expo/vector-icons';
+import { gql, useMutation } from '@apollo/client';
+import { useNavigation } from '@react-navigation/core';
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -45,6 +46,15 @@ const ExtraContainer = styled.View`
   padding: 10px;
 `;
 
+const TOGGLE_LIKE_MUTATION = gql`
+  mutation toggleLike($id: Int!) {
+    toggleLike(id: $id) {
+      ok
+      error
+    }
+  }
+`;
+
 const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
@@ -54,6 +64,38 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
       setImageHeight((height * Swidth) / width);
     });
   }, [file]);
+
+  const updateToggleLike = (cache, result) => {
+    const {
+      data: {
+        toggleLike: { ok },
+      },
+    } = result;
+    if (ok) {
+      const photoId = `Photo:${id}`;
+      cache.modify({
+        id: photoId,
+        fields: {
+          isLiked(prev) {
+            return !prev;
+          },
+          likes(prev) {
+            if (isLiked) {
+              return prev - 1;
+            }
+            return prev + 1;
+          },
+        },
+      });
+    }
+  };
+  const [toggleLikeMutation, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
+    variables: {
+      id,
+    },
+    update: updateToggleLike,
+  });
+
   return (
     <Container>
       <Header onPress={() => navigation.navigate('Profile')}>
@@ -67,7 +109,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
       />
       <ExtraContainer>
         <Actions>
-          <Action>
+          <Action onPress={toggleLikeMutation}>
             <Ionicons
               name={isLiked ? 'heart' : 'heart-outline'}
               color={isLiked ? 'tomato' : 'white'}

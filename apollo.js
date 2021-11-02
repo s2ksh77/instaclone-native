@@ -24,6 +24,16 @@ export const logUserOut = async () => {
   tokenVar(null);
 };
 
+export const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        seeFeed: offsetLimitPagination(),
+      },
+    },
+  },
+});
+
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
@@ -35,15 +45,7 @@ const authLink = setContext((_, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          seeFeed: offsetLimitPagination(),
-        },
-      },
-    },
-  }),
+  cache,
 });
 
 export default client;
