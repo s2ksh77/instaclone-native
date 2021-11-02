@@ -106,8 +106,8 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   return (
     <Container>
       <Header onPress={goToProfile}>
-        <UserAvatar resizeMode="cover" source={{ uri: user.avatar }} />
-        <Username>{user.username}</Username>
+        <UserAvatar resizeMode="cover" source={{ uri: user?.avatar }} />
+        <Username>{user?.username}</Username>
       </Header>
       <File
         resizeMode="contain"
@@ -132,7 +132,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         </TouchableOpacity>
         <Caption>
           <TouchableOpacity onPress={goToProfile}>
-            <Username>{user.username}</Username>
+            <Username>{user?.username}</Username>
           </TouchableOpacity>
           <CaptionText>{caption}</CaptionText>
         </Caption>
@@ -151,6 +151,7 @@ Photo.propTypes = {
   file: PropTypes.string.isRequired,
   isLiked: PropTypes.bool.isRequired,
   likes: PropTypes.number.isRequired,
+  commentNumber: PropTypes.number,
 };
 
 export default Photo;
