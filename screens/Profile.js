@@ -1,7 +1,46 @@
 import React, { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { gql, useQuery } from '@apollo/client';
+import { PHOTO_FRAGMENT } from '../fragments';
+import Photo from '../components/Photo';
+import ScreenLayout from '../components/ScreenLayout';
+import { useState } from 'react/cjs/react.development';
+import Profile from '../components/Profile';
 
-const Profile = ({ navigation, route }) => {
+const SEE_PROFILE_QUERY = gql`
+  query seeProfile($username: String!) {
+    seeProfile(username: $username) {
+      firstName
+      lastName
+      username
+      bio
+      avatar
+      photos {
+        ...PhotoFragment
+      }
+      totalFollowing
+      totalFollowers
+      isMe
+      isFollowing
+    }
+  }
+  ${PHOTO_FRAGMENT}
+`;
+
+const ProfileScreen = ({ navigation, route }) => {
+  const { data, loading, refetch } = useQuery(SEE_PROFILE_QUERY, {
+    variables: {
+      username: route?.params?.username,
+    },
+  });
+  const [refresing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     if (route?.params?.username) {
       navigation.setOptions({
@@ -11,16 +50,9 @@ const Profile = ({ navigation, route }) => {
   }, []);
 
   return (
-    <View
-      style={{
-        backgroundColor: 'black',
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Text style={{ color: 'white' }}>Profile</Text>
-    </View>
+    <ScreenLayout loading={loading} isStyle={false}>
+      <Profile {...data?.seeProfile} />
+    </ScreenLayout>
   );
 };
-export default Profile;
+export default ProfileScreen;

@@ -7,7 +7,7 @@ import Likes from '../screens/Likes';
 import Me from '../screens/Me';
 import Notifications from '../screens/Notifications';
 import PhotoScreen from '../screens/Photo';
-import Profile from '../screens/Profile';
+import ProfileScreen from '../screens/Profile';
 import Search from '../screens/Search';
 
 const Stack = createStackNavigator();
@@ -52,7 +52,7 @@ const SharedStackNav = ({ screenName }) => {
         <Stack.Screen name={'Notifications'} component={Notifications} />
       ) : null}
       {screenName === 'Me' ? <Stack.Screen name={'Me'} component={Me} /> : null}
-      <Stack.Screen name={'Profile'} component={Profile} />
+      <Stack.Screen name={'Profile'} component={ProfileScreen} />
       <Stack.Screen name={'Photo'} component={PhotoScreen} />
       <Stack.Screen name={'Likes'} component={Likes} />
       <Stack.Screen name={'Comments'} component={Comments} />

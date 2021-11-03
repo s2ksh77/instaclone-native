@@ -34,11 +34,11 @@ export default function App() {
       isLoggedInVar(true);
       tokenVar(token);
     }
-    await persistCache({
-      cache,
-      storage: new AsyncStorageWrapper(AsyncStorage),
-      serialize: false,
-    });
+    // await persistCache({
+    //   cache,
+    //   storage: new AsyncStorageWrapper(AsyncStorage),
+    //   serialize: false,
+    // });
     return preLoadAssets();
   };
 
