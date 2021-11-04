@@ -22,7 +22,6 @@ import {
   FOLLOW_USER_MUTATION,
   UNFOLLOW_USER_MUTATION,
 } from '../query';
-import { handleFollow, handleUnFollow } from '../logics/follow';
 
 const Container = styled.View`
   background-color: black;

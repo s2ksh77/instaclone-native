@@ -4,15 +4,21 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 const Container = styled.View`
-  flex: 1;
+  ${(props) =>
+    props.isLogin
+      ? css`
+          flex: 1;
+        `
+      : ''}
   align-items: center;
   justify-content: center;
   background-color: black;
-  padding: 0px 40px;
+  padding: ${(props) => (props.isLogin ? '0px 40px' : '0px')};
 `;
 
 const Logo = styled.Image`
@@ -20,29 +26,36 @@ const Logo = styled.Image`
   width: 100%;
   height: 100px;
   margin: 0 auto;
-  margin-bottom: 20px;
+  margin-bottom: ${(props) => (props.isLogin ? '20px' : '0px')};
 `;
 
-const AuthLayout = ({ children }) => {
+const AuthLayout = ({ children, isLogin = true }) => {
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
+  const { width } = useWindowDimensions();
   return (
     <TouchableWithoutFeedback
-      style={{ flex: 1 }}
+      style={{
+        flex: 1,
+        flexDirection: isLogin ? 'row' : 'column',
+      }}
       onPress={dismissKeyboard}
       disabled={Platform.OS === 'web'}
     >
-      <Container>
+      <Container isLogin={isLogin}>
         <KeyboardAvoidingView
-          style={{ width: '100%' }}
+          style={{ width: isLogin ? '100%' : width }}
           behavior="padding"
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 50}
         >
-          <Logo
-            resizeMode="contain"
-            source={require('../../assets/Instagram-logo.png')}
-          />
+          {isLogin ? (
+            <Logo
+              isLogin={isLogin}
+              resizeMode="contain"
+              source={require('../../assets/Instagram-logo.png')}
+            />
+          ) : null}
           {children}
         </KeyboardAvoidingView>
       </Container>

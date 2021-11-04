@@ -4,7 +4,6 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { colors } from '../colors';
 import useMe from '../hooks/useMe';
-import { handleFollow, handleUnFollow } from '../logics/follow';
 import { FOLLOW_USER_MUTATION, UNFOLLOW_USER_MUTATION } from '../query';
 
 const Column = styled.TouchableOpacity`
