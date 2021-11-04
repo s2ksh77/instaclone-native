@@ -38,7 +38,9 @@ export default function App() {
     //   cache,
     //   storage: new AsyncStorageWrapper(AsyncStorage),
     //   serialize: false,
+    //   debug,
     // });
+
     return preLoadAssets();
   };
 

@@ -10,11 +10,19 @@ import {
   View,
 } from 'react-native';
 import styled from 'styled-components/native';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { PHOTO_FRAGMENT } from '../fragments';
 import { colors } from '../colors';
 import ScreenLayout from '../components/ScreenLayout';
 import { useNavigation } from '@react-navigation/core';
+import client from '../apollo';
+import useMe from '../hooks/useMe';
+import {
+  SEE_PROFILE_QUERY,
+  FOLLOW_USER_MUTATION,
+  UNFOLLOW_USER_MUTATION,
+} from '../query';
+import { handleFollow, handleUnFollow } from '../logics/follow';
 
 const Container = styled.View`
   background-color: black;
@@ -73,25 +81,8 @@ const PhotoContainer = styled.View`
   height: 100%;
 `;
 
-const FOLLOW_USER_MUTATION = gql`
-  mutation followUser($username: String!) {
-    followUser(username: $username) {
-      ok
-      error
-    }
-  }
-`;
-
-const UNFOLLOW_USER_MUTATION = gql`
-  mutation unfollowUser($username: String!) {
-    unfollowUser(username: $username) {
-      ok
-      error
-    }
-  }
-`;
-
 const Profile = ({
+  id,
   username,
   avatar,
   photos,
@@ -104,6 +95,83 @@ const Profile = ({
   const navigation = useNavigation();
   const numColumns = 4;
   const { width } = useWindowDimensions();
+  const {
+    data: { me },
+  } = useMe();
+
+  const handleUnFollow = (cache, result) => {
+    const {
+      data: {
+        unfollowUser: { ok },
+      },
+    } = result;
+    if (!ok) return;
+
+    cache.modify({
+      id: `User:${id}`,
+      fields: {
+        isFollowing(prev) {
+          return !prev;
+        },
+        totalFollowers(prev) {
+          return prev - 1;
+        },
+      },
+    });
+    cache.modify({
+      id: `User:${me.id}`,
+      fields: {
+        totalFollowing(prev) {
+          return prev - 1;
+        },
+      },
+    });
+  };
+
+  const handleFollow = (cache, result) => {
+    const {
+      data: {
+        followUser: { ok },
+      },
+    } = result;
+
+    if (!ok) return;
+
+    cache.modify({
+      id: `User:${id}`,
+      fields: {
+        isFollowing(prev) {
+          return !prev;
+        },
+        totalFollowers(prev) {
+          return prev + 1;
+        },
+      },
+    });
+
+    cache.modify({
+      id: `User:${me.id}`,
+      fields: {
+        totalFollowing(prev) {
+          return prev + 1;
+        },
+      },
+    });
+  };
+
+  const [followFn] = useMutation(FOLLOW_USER_MUTATION, {
+    variables: {
+      username,
+    },
+    update: handleFollow,
+  });
+
+  const [unFollowFn] = useMutation(UNFOLLOW_USER_MUTATION, {
+    variables: {
+      username,
+    },
+    update: handleUnFollow,
+  });
 
   const renderItem = ({ item: photo }) => (
     <TouchableOpacity
@@ -125,11 +193,25 @@ const Profile = ({
     </TouchableOpacity>
   );
 
-  const [refresing, setRefreshing] = useState(false);
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
+  const getButton = () => {
+    if (isMe)
+      return (
+        <Button style={{ backgroundColor: 'white' }}>
+          <ButtonText style={{ color: 'black' }}>프로필 편집</ButtonText>
+        </Button>
+      );
+    if (isFollowing)
+      return (
+        <Button onPress={unFollowFn}>
+          <ButtonText>팔로잉</ButtonText>
+        </Button>
+      );
+    else
+      return (
+        <Button onPress={followFn}>
+          <ButtonText>팔로우</ButtonText>
+        </Button>
+      );
   };
 
   return (
@@ -157,16 +239,8 @@ const Profile = ({
         <Value>{bio}</Value>
       </HeaderCaption>
       <ButtonContainer>
+        {getButton()}
         {isMe ? null : (
-          <Button>
-            <ButtonText>{isFollowing ? '팔로잉' : '팔로워'}</ButtonText>
-          </Button>
-        )}
-        {isMe ? (
-          <Button style={{ backgroundColor: 'white' }}>
-            <ButtonText style={{ color: 'black' }}>{'프로필 편집'}</ButtonText>
-          </Button>
-        ) : (
           <Button style={{ backgroundColor: 'white' }}>
             <ButtonText style={{ color: 'black' }}>{'메시지'}</ButtonText>
           </Button>

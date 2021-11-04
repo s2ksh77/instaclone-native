@@ -150,7 +150,7 @@ Photo.propTypes = {
   caption: PropTypes.string,
   file: PropTypes.string.isRequired,
   isLiked: PropTypes.bool.isRequired,
-  likes: PropTypes.number.isRequired,
+  likes: PropTypes.number,
   commentNumber: PropTypes.number,
 };
 

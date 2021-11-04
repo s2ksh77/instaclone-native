@@ -5,17 +5,17 @@ const ScreenLayout = ({ loading, children, isStyle = true }) => {
   return (
     <View
       style={
-        isStyle
+        isStyle && loading
           ? {
               backgroundColor: 'black',
               flex: 1,
               alignItems: 'center',
               justifyContent: 'center',
             }
-          : null
+          : { backgroundColor: 'black', flex: 1 }
       }
     >
-      {loading ? <ActivityIndicator color="white" /> : children}
+      {loading ? <ActivityIndicator color="white" backgroundColor="black" /> : children}
     </View>
   );
 };

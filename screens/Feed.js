@@ -33,7 +33,6 @@ const Feed = () => {
       offset: 0,
     },
   });
-  console.log(data);
   const [refreshing, setRefreshing] = useState(false);
 
   const renderPhoto = ({ item: photo }) => {

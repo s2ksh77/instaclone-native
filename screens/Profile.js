@@ -6,26 +6,7 @@ import Photo from '../components/Photo';
 import ScreenLayout from '../components/ScreenLayout';
 import { useState } from 'react/cjs/react.development';
 import Profile from '../components/Profile';
-
-const SEE_PROFILE_QUERY = gql`
-  query seeProfile($username: String!) {
-    seeProfile(username: $username) {
-      firstName
-      lastName
-      username
-      bio
-      avatar
-      photos {
-        ...PhotoFragment
-      }
-      totalFollowing
-      totalFollowers
-      isMe
-      isFollowing
-    }
-  }
-  ${PHOTO_FRAGMENT}
-`;
+import { SEE_PROFILE_QUERY } from '../query';
 
 const ProfileScreen = ({ navigation, route }) => {
   const { data, loading, refetch } = useQuery(SEE_PROFILE_QUERY, {
@@ -33,13 +14,6 @@ const ProfileScreen = ({ navigation, route }) => {
       username: route?.params?.username,
     },
   });
-  const [refresing, setRefreshing] = useState(false);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
 
   useEffect(() => {
     if (route?.params?.username) {
