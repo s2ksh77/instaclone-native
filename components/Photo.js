@@ -123,7 +123,16 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
               size={22}
             />
           </Action>
-          <Action onPress={() => navigation.navigate('Comments')}>
+          <Action
+            onPress={() =>
+              navigation.navigate('Comments', {
+                photoId: id,
+                caption,
+                avatar: user?.avatar,
+                username: user?.username,
+              })
+            }
+          >
             <Ionicons name="chatbubble-outline" color="white" size={22} />
           </Action>
         </Actions>
