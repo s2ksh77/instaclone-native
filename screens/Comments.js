@@ -3,10 +3,12 @@ import { FlatList, Text, View } from 'react-native';
 import { gql, useQuery, useReactiveVar } from '@apollo/client';
 import { PHOTO_FRAGMENT, USER_FRAGMENT } from '../fragments';
 import ScreenLayout from '../components/ScreenLayout';
-import { useState } from 'react/cjs/react.development';
+import { useEffect, useState } from 'react/cjs/react.development';
 import UserRow from '../components/UserRow';
 import CommentRow from '../components/CommentRow';
 import styled from 'styled-components/native';
+import { useNavigation } from '@react-navigation/core';
+import { COMMENTS_QUERY } from '../query';
 
 const Header = styled.View`
   background-color: black;
@@ -41,27 +43,7 @@ const Wrapper = styled.View`
   margin: 0px 0px 25px 0px;
 `;
 
-const COMMENTS_QUERY = gql`
-  query seePhotoComments($id: Int!) {
-    seePhotoComments(id: $id) {
-      id
-      user {
-        ...UserFragment
-      }
-      photo {
-        ...PhotoFragment
-      }
-      payload
-      isMine
-      createdAt
-      updatedAt
-    }
-  }
-  ${USER_FRAGMENT}
-  ${PHOTO_FRAGMENT}
-`;
-
-const Comments = ({ route }) => {
+const Comments = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const { data, loading, refetch } = useQuery(COMMENTS_QUERY, {
     variables: {
@@ -76,6 +58,12 @@ const Comments = ({ route }) => {
     await refetch();
     setRefreshing(false);
   };
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: '댓글',
+    });
+  }, []);
 
   return (
     <ScreenLayout loading={loading} isStyle={false}>

@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { PHOTO_FRAGMENT } from './fragments';
+import { PHOTO_FRAGMENT, USER_FRAGMENT } from './fragments';
 
 export const SEE_PROFILE_QUERY = gql`
   query seeProfile($username: String!) {
@@ -38,4 +38,24 @@ export const UNFOLLOW_USER_MUTATION = gql`
       error
     }
   }
+`;
+
+export const COMMENTS_QUERY = gql`
+  query seePhotoComments($id: Int!) {
+    seePhotoComments(id: $id) {
+      id
+      user {
+        ...UserFragment
+      }
+      photo {
+        ...PhotoFragment
+      }
+      payload
+      isMine
+      createdAt
+      updatedAt
+    }
+  }
+  ${USER_FRAGMENT}
+  ${PHOTO_FRAGMENT}
 `;

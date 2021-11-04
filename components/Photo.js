@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
-import { Image, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { FlatList, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { gql, useMutation } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/core';
+import Comments from '../screens/Comments';
+import { COMMENTS_QUERY } from '../query';
+import CommentRow from './CommentRow';
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -59,6 +62,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
+  const [moreComment, setMoreComment] = useState(false);
   useEffect(() => {
     Image.getSize(file, (width, height) => {
       setImageHeight((height * Swidth) / width);
@@ -103,6 +107,19 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     });
   };
 
+  const { data: commentsData } = useQuery(COMMENTS_QUERY, {
+    variables: {
+      id,
+    },
+  });
+
+  const moreComments = () => setMoreComment(!moreComment);
+  const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
+
+  useEffect(() => {
+    if (commentsData?.seePhotoComments?.length === 0) setMoreComment('');
+  }, []);
+
   return (
     <Container>
       <Header onPress={goToProfile}>
@@ -145,6 +162,20 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
           </TouchableOpacity>
           <CaptionText>{caption}</CaptionText>
         </Caption>
+        <Caption>
+          <TouchableOpacity onPress={moreComments}>
+            <CaptionText>
+              {moreComment ? '숨기기' : moreComment === '' ? null : '더 보기'}
+            </CaptionText>
+          </TouchableOpacity>
+        </Caption>
+        {moreComment ? (
+          <FlatList
+            data={commentsData?.seePhotoComments}
+            keyExtractor={(comment) => '' + comment.id}
+            renderItem={renderComment}
+          />
+        ) : null}
       </ExtraContainer>
     </Container>
   );
