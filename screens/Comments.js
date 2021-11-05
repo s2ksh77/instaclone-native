@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT, USER_FRAGMENT } from '../fragments';
@@ -84,13 +84,29 @@ const CREATE_COMMENT_MUTATION = gql`
   }
 `;
 
+const SEE_PHOTO = gql`
+  query seePhoto($id: Int!) {
+    seePhoto(id: $id) {
+      ...PhotoFragment
+    }
+  }
+  ${PHOTO_FRAGMENT}
+`;
+
 const Comments = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
+  const inputRef = useRef(null);
   const { data, loading, refetch } = useQuery(COMMENTS_QUERY, {
     variables: {
       id: route?.params?.photoId,
     },
   });
+  const { data: photoData } = useQuery(SEE_PHOTO, {
+    variables: {
+      id: route?.params?.photoId,
+    },
+  });
+
   const [isFocus, setIsFocus] = useState(false);
   const {
     register,
@@ -99,43 +115,25 @@ const Comments = ({ navigation, route }) => {
     getValues,
     formState: { errors },
     watch,
-  } = useForm();
+    reset,
+  } = useForm({
+    defaultValues: {
+      payload: '',
+    },
+  });
   const { data: userData } = useMe();
 
-  const createCommentUpdate = (cache, result) => {
+  const createCommentUpdate = async (cache, result) => {
     const { payload } = getValues();
-    setValue('payload', '');
+
     const {
       data: {
         createComment: { ok, id },
       },
     } = result;
     if (ok && userData?.me) {
-      const newComment = {
-        __typename: 'Comment',
-        createdAt: Date.now() + '',
-        id,
-        isMine: true,
-        payload,
-        user: {
-          ...userData.me,
-        },
-      };
-      const newCacheComment = cache.writeFragment({
-        data: newComment,
-        fragment: COMMENT_FRAGMENT,
-      });
-      cache.modify({
-        id: `Photo:${route?.params?.photoId}`,
-        fields: {
-          comments(prev) {
-            return [...prev, newCacheComment];
-          },
-          commentNumber(prev) {
-            return prev + 1;
-          },
-        },
-      });
+      await refetch();
+      inputRef?.current?.clear();
     }
   };
   const [createCommentMutation, { loading: createLoading }] = useMutation(
@@ -207,8 +205,9 @@ const Comments = ({ navigation, route }) => {
       <InputWrapper>
         <AuthLayout isLogin={false}>
           <Wrapper>
-            <Avatar source={{ uri: route?.params?.avatar }} />
+            <Avatar source={{ uri: userData?.me?.avatar }} />
             <TextInput
+              ref={inputRef}
               placeholder="댓글 달기"
               onSubmitEditing={handleSubmit(onValid)}
               placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
@@ -217,7 +216,6 @@ const Comments = ({ navigation, route }) => {
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
             />
-
             <Button onPress={handleSubmit(onValid)}>
               <ButtonText>게시</ButtonText>
             </Button>

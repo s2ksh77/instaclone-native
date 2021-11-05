@@ -91,9 +91,9 @@ const CommentRow = ({ id, payload, isMine, createdAt, updatedAt, photo, user }) 
           <Row>
             <Comment width={width}>{payload}</Comment>
           </Row>
-          <Button>
+          {/* <Button>
             <ButtonText>댓글 달기</ButtonText>
-          </Button>
+          </Button> */}
         </RowWrapper>
       </Column>
     </Wrapper>
