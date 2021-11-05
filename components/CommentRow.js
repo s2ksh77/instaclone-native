@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
@@ -6,6 +5,7 @@ import styled from 'styled-components/native';
 import { colors } from '../colors';
 import useMe from '../hooks/useMe';
 import { FOLLOW_USER_MUTATION, UNFOLLOW_USER_MUTATION } from '../query';
+import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 
 const Column = styled.TouchableOpacity`
   flex-direction: row;
@@ -23,11 +23,12 @@ const Username = styled.Text`
 `;
 
 const Wrapper = styled.View`
+  width: 100%;
+  display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   padding: 5px 10px;
-  width: ${(props) => props.width};
+  /* width: ${(props) => props.width}; */
 `;
 const Button = styled.TouchableOpacity`
   background-color: black;
@@ -40,24 +41,40 @@ const ButtonText = styled.Text`
   font-weight: 600;
 `;
 
+const CommentWrapper = styled.View`
+  flex-direction: row;
+`;
+
 const Comment = styled.Text`
   color: white;
   margin: 0px 20px 0px 20px;
-  width: ${(props) => props.width};
+  width: ${(props) => props.width - 160};
 `;
 
-const RowWrapper = styled.View``;
-
-const Row = styled.View`
+const RowWrapper = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+`;
+
+const Row = styled.View`
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: space-between; */
 `;
 
 const COMMENTBTN = styled.TouchableOpacity`
   justify-content: center;
   padding: 5px;
   border-radius: 4px;
+`;
+
+const DELETE_COMMENT = gql`
+  mutation deleteComment($id: Int!) {
+    deleteComment(id: $id) {
+      ok
+    }
+  }
 `;
 
 const CommentRow = ({ id, payload, isMine, createdAt, updatedAt, photo, user }) => {
@@ -67,33 +84,36 @@ const CommentRow = ({ id, payload, isMine, createdAt, updatedAt, photo, user }) 
     data: { me },
   } = useMe();
 
-  const getButton = () => {
-    if (isMe) return null;
-    if (isFollowing)
-      return (
-        <Button onPress={unFollowFn}>
-          <ButtonText>팔로잉</ButtonText>
-        </Button>
-      );
-    else
-      return (
-        <Button onPress={followFn}>
-          <ButtonText>팔로우</ButtonText>
-        </Button>
-      );
+  const deleteCommentUpdate = (cache, result) => {
+    const {
+      data: {
+        deleteComment: { ok },
+      },
+    } = result;
+    if (!ok) return;
+    cache.evict({ id: `Comment:${id}` });
   };
+
+  const [deleteCommentFn] = useMutation(DELETE_COMMENT, {
+    variables: {
+      id,
+    },
+    update: deleteCommentUpdate,
+  });
   return (
     <Wrapper width={width}>
       <Column>
-        <Avatar source={{ uri: user?.avatar }} />
-        <Username>{user?.username}</Username>
         <RowWrapper>
-          <Row>
-            <Comment width={width}>{payload}</Comment>
-          </Row>
-          {/* <Button>
-            <ButtonText>댓글 달기</ButtonText>
-          </Button> */}
+          <Avatar source={{ uri: user?.avatar }} />
+          <Username>{user?.username}</Username>
+        </RowWrapper>
+        <RowWrapper>
+          <Comment width={width}>{payload}</Comment>
+          {isMine ? (
+            <Button onPress={deleteCommentFn}>
+              <ButtonText>✖</ButtonText>
+            </Button>
+          ) : null}
         </RowWrapper>
       </Column>
     </Wrapper>

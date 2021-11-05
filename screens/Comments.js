@@ -84,24 +84,10 @@ const CREATE_COMMENT_MUTATION = gql`
   }
 `;
 
-const SEE_PHOTO = gql`
-  query seePhoto($id: Int!) {
-    seePhoto(id: $id) {
-      ...PhotoFragment
-    }
-  }
-  ${PHOTO_FRAGMENT}
-`;
-
 const Comments = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const inputRef = useRef(null);
   const { data, loading, refetch } = useQuery(COMMENTS_QUERY, {
-    variables: {
-      id: route?.params?.photoId,
-    },
-  });
-  const { data: photoData } = useQuery(SEE_PHOTO, {
     variables: {
       id: route?.params?.photoId,
     },
@@ -125,7 +111,6 @@ const Comments = ({ navigation, route }) => {
 
   const createCommentUpdate = async (cache, result) => {
     const { payload } = getValues();
-
     const {
       data: {
         createComment: { ok, id },
