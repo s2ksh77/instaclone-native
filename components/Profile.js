@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -8,20 +8,20 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   View,
-} from 'react-native';
-import styled from 'styled-components/native';
-import { gql, useMutation, useQuery } from '@apollo/client';
-import { PHOTO_FRAGMENT } from '../fragments';
-import { colors } from '../colors';
-import ScreenLayout from '../components/ScreenLayout';
-import { useNavigation } from '@react-navigation/core';
-import client from '../apollo';
-import useMe from '../hooks/useMe';
+} from "react-native";
+import styled from "styled-components/native";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { PHOTO_FRAGMENT } from "../fragments";
+import { colors } from "../colors";
+import ScreenLayout from "../components/ScreenLayout";
+import { useNavigation } from "@react-navigation/core";
+import client, { logUserOut } from "../apollo";
+import useMe from "../hooks/useMe";
 import {
   SEE_PROFILE_QUERY,
   FOLLOW_USER_MUTATION,
   UNFOLLOW_USER_MUTATION,
-} from '../query';
+} from "../query";
 
 const Container = styled.View`
   background-color: black;
@@ -174,9 +174,9 @@ const Profile = ({
 
   const renderItem = ({ item: photo }) => (
     <TouchableOpacity
-      style={{ flexWrap: 'nowrap' }}
+      style={{ flexWrap: "nowrap" }}
       onPress={() =>
-        navigation.navigate('Photo', {
+        navigation.navigate("Photo", {
           photoId: photo.id,
         })
       }
@@ -195,8 +195,8 @@ const Profile = ({
   const getButton = () => {
     if (isMe)
       return (
-        <Button style={{ backgroundColor: 'white' }}>
-          <ButtonText style={{ color: 'black' }}>프로필 편집</ButtonText>
+        <Button style={{ backgroundColor: "white" }} onPress={logUserOut}>
+          <ButtonText style={{ color: "black" }}>로그 아웃</ButtonText>
         </Button>
       );
     if (isFollowing)
@@ -240,8 +240,8 @@ const Profile = ({
       <ButtonContainer>
         {getButton()}
         {isMe ? null : (
-          <Button style={{ backgroundColor: 'white' }}>
-            <ButtonText style={{ color: 'black' }}>{'메시지'}</ButtonText>
+          <Button style={{ backgroundColor: "white" }}>
+            <ButtonText style={{ color: "black" }}>{"메시지"}</ButtonText>
           </Button>
         )}
       </ButtonContainer>
