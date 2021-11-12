@@ -1,9 +1,9 @@
-import React from "react";
-import SelectPhoto from "../screens/SelectPhoto";
-import TakePhoto from "../screens/TakePhoto";
-import { Ionicons } from "@expo/vector-icons";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
+import React from 'react';
+import SelectPhoto from '../screens/SelectPhoto';
+import TakePhoto from '../screens/TakePhoto';
+import { Ionicons } from '@expo/vector-icons';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -14,10 +14,10 @@ const UploadNav = () => {
       tabBarPosition="bottom"
       tabBarOptions={{
         style: {
-          backgroundColor: "black",
+          backgroundColor: 'black',
         },
-        activeTintColor: "white",
-        indicatorStyle: { backgroundColor: "white", top: 0 },
+        activeTintColor: 'white',
+        indicatorStyle: { backgroundColor: 'white', top: 0 },
       }}
     >
       <Tab.Screen name="Select">
@@ -25,10 +25,10 @@ const UploadNav = () => {
           <Stack.Navigator
             screenOptions={{
               headerStyle: {
-                backgroundColor: "black",
+                backgroundColor: 'black',
                 shadowOpacity: 0.3,
               },
-              headerTintColor: "white",
+              headerTintColor: 'white',
               headerBackTitleVisible: false,
               headerBackImage: ({ tintColor }) => (
                 <Ionicons color={tintColor} name="close" size={28} />
@@ -37,7 +37,7 @@ const UploadNav = () => {
           >
             <Stack.Screen
               name="Select"
-              options={{ title: "Choose a Photo" }}
+              options={{ title: 'Choose a Photo' }}
               component={SelectPhoto}
             />
           </Stack.Navigator>

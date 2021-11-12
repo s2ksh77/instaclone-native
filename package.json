@@ -21,6 +21,7 @@
     "expo-app-loading": "~1.2.1",
     "expo-asset": "~8.4.3",
     "expo-font": "~10.0.3",
+    "expo-media-library": "~13.0.3",
     "expo-status-bar": "~1.1.0",
     "graphql": "^15.7.1",
     "react": "17.0.1",

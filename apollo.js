@@ -1,12 +1,12 @@
-import { ApolloClient, createHttpLink, InMemoryCache, makeVar } from "@apollo/client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setContext } from "@apollo/client/link/context";
-import { offsetLimitPagination } from "@apollo/client/utilities";
+import { ApolloClient, createHttpLink, InMemoryCache, makeVar } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setContext } from '@apollo/client/link/context';
+import { offsetLimitPagination } from '@apollo/client/utilities';
 
 export const isLoggedInVar = makeVar(false);
-export const tokenVar = makeVar("");
+export const tokenVar = makeVar('');
 
-const TOKEN = "token";
+const TOKEN = 'token';
 
 export const logUserIn = async (token) => {
   await AsyncStorage.setItem(TOKEN, token);
@@ -15,7 +15,7 @@ export const logUserIn = async (token) => {
 };
 
 const httpLink = createHttpLink({
-  uri: "http://192.168.35.227:4000/graphql",
+  uri: 'http://192.168.151.53:4000/graphql',
 });
 
 export const logUserOut = async () => {
