@@ -21,7 +21,7 @@ export const logUserIn = async (token) => {
 // });
 
 const uploadHttpLink = createUploadLink({
-  uri: 'http://7ef4-210-90-149-11.ngrok.io/graphql',
+  uri: 'http://192.168.151.53:4000/graphql',
 });
 
 export const logUserOut = async () => {

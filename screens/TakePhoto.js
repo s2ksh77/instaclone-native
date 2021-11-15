@@ -114,17 +114,21 @@ const TakePhoto = ({ navigation }) => {
     });
   };
   const onDismiss = () => setTakenPhoto('');
-  const onUpload = () => {
-    Alert.alert('Save Photo ?', 'Save Photo & Upload or just upload', [
-      {
-        text: '저장 및 업로드',
-        onPress: () => goToUpload(true),
-      },
-      {
-        text: '업로드',
-        onPress: () => goToUpload(false),
-      },
-    ]);
+  const onUpload = async () => {
+    // Alert.alert('Save Photo ?', 'Save Photo & Upload or just upload', [
+    //   {
+    //     text: '저장 및 업로드',
+    //     onPress: () => goToUpload(true),
+    //   },
+    //   {
+    //     text: '업로드',
+    //     onPress: () => goToUpload(false),
+    //   },
+    // ]);
+    await MediaLibrary.saveToLibraryAsync(takenPhoto);
+    navigation.navigate('UploadForm', {
+      file: takenPhoto,
+    });
   };
   const isFocused = useIsFocused();
 
