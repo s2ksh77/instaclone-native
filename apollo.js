@@ -2,6 +2,8 @@ import { ApolloClient, createHttpLink, InMemoryCache, makeVar } from '@apollo/cl
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setContext } from '@apollo/client/link/context';
 import { offsetLimitPagination } from '@apollo/client/utilities';
+import { onError } from '@apollo/client/link/error';
+import { createUploadLink } from 'apollo-upload-client';
 
 export const isLoggedInVar = makeVar(false);
 export const tokenVar = makeVar('');
@@ -14,8 +16,12 @@ export const logUserIn = async (token) => {
   tokenVar(token);
 };
 
-const httpLink = createHttpLink({
-  uri: 'http://192.168.151.53:4000/graphql',
+// const httpLink = createHttpLink({
+//   uri: 'http://192.168.151.53:4000/graphql',
+// });
+
+const uploadHttpLink = createUploadLink({
+  uri: 'http://7ef4-210-90-149-11.ngrok.io/graphql',
 });
 
 export const logUserOut = async () => {
@@ -23,6 +29,15 @@ export const logUserOut = async () => {
   isLoggedInVar(false);
   tokenVar(null);
 };
+
+const onErrorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log(`Graph QL Error`, graphQLErrors);
+  }
+  if (networkError) {
+    console.log(`Network Error`, networkError);
+  }
+});
 
 export const cache = new InMemoryCache({
   typePolicies: {
@@ -44,10 +59,10 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: authLink.concat(onErrorLink).concat(uploadHttpLink),
   cache,
 });
-
+//httpLink 종료 링크라 맨마지막
 export default client;
 
 // ngrok http 4000 or localtunnel --port 4000 이거로 젠 된거로 uri 바꿈

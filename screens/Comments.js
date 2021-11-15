@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, Keyboard, Text, View } from 'react-native';
 import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT, USER_FRAGMENT } from '../fragments';
 import ScreenLayout from '../components/ScreenLayout';
@@ -45,7 +45,7 @@ const Wrapper = styled.View`
   padding: 5px 10px;
   border-width: 2px;
   border-bottom-color: white;
-  margin: 0px 0px 25px 0px;
+  margin: 0px;
 `;
 
 const Button = styled.TouchableOpacity`
@@ -60,16 +60,7 @@ const ButtonText = styled.Text`
 `;
 
 const CommentWrapper = styled.View`
-  ${(props) =>
-    props.isFocus
-      ? css`
-          max-height: 70%;
-          min-height: 70%;
-        `
-      : css`
-          max-height: 85%;
-          min-height: 85%;
-        `}
+  flex: 1;
 `;
 
 const InputWrapper = styled.View``;
@@ -119,6 +110,7 @@ const Comments = ({ navigation, route }) => {
     if (ok && userData?.me) {
       await refetch();
       inputRef?.current?.clear();
+      Keyboard.dismiss();
     }
   };
   const [createCommentMutation, { loading: createLoading }] = useMutation(
@@ -189,7 +181,7 @@ const Comments = ({ navigation, route }) => {
       </CommentWrapper>
       <InputWrapper>
         <AuthLayout isLogin={false}>
-          <Wrapper>
+          <Wrapper style={{ borderWidth: 0 }}>
             <Avatar source={{ uri: userData?.me?.avatar }} />
             <TextInput
               ref={inputRef}

@@ -98,8 +98,8 @@ const TakePhoto = ({ navigation }) => {
   const takePhoto = async () => {
     if (camera.current && cameraReady) {
       const { uri } = await camera.current.takePictureAsync({
-        quality: 1,
         exif: true,
+        skipProcessing: true,
       });
       setTakenPhoto(uri);
     }
@@ -145,7 +145,7 @@ const TakePhoto = ({ navigation }) => {
           </CloseButton>
         </Camera>
       ) : (
-        <Image source={{ uri: takenPhoto }} styled={{ flex: 1 }} />
+        <Image source={{ uri: takenPhoto }} style={{ flex: 1 }} />
       )}
       {takenPhoto === '' ? (
         <Actions>
@@ -192,7 +192,7 @@ const TakePhoto = ({ navigation }) => {
           </ButtonsContainer>
         </Actions>
       ) : (
-        <Actions>
+        <Actions style={{ flexDirection: 'row' }}>
           <PhotoAction onPress={onDismiss}>
             <PhotoActionText>Dismiss</PhotoActionText>
           </PhotoAction>
