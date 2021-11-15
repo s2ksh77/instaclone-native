@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   Platform,
+  StatusBar,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
@@ -102,7 +103,9 @@ const SelectPhoto = ({ navigation }) => {
   );
 
   const HeaderRight = () => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('UploadForm', { file: chosenPhoto })}
+    >
       <HeaderRightText>Next</HeaderRightText>
     </TouchableOpacity>
   );
@@ -115,10 +118,11 @@ const SelectPhoto = ({ navigation }) => {
     navigation.setOptions({
       headerRight: HeaderRight,
     });
-  });
+  }, [chosenPhoto]);
 
   return (
     <Container>
+      <StatusBar hidden={true} />
       <Top>
         {chosenPhoto !== '' ? (
           <Image source={{ uri: chosenPhoto }} style={{ width, height: '100%' }} />
