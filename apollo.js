@@ -28,11 +28,17 @@ export const logUserIn = async (token) => {
 // });
 
 const uploadHttpLink = createUploadLink({
-  uri: 'http://192.168.151.53:4000/graphql',
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? 'https://soostaclone-backend.herokuapp.com/graphql'
+      : 'http://localhost:4000/graphql',
 });
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://192.168.151.53:4000/graphql',
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? 'ws://soostaclone-backend.herokuapp.com/graphql'
+      : 'ws://localhost:4000/graphql',
   options: {
     reconnect: true,
     connectionParams: () => ({
