@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, View } from 'react-native';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import ScreenLayout from '../components/ScreenLayout';
@@ -47,6 +47,20 @@ const InputContainer = styled.View`
 `;
 const SendButton = styled.TouchableOpacity``;
 
+const ROOM_UPDATES = gql`
+  subscription roomUpdates($id: Int!) {
+    roomUpdates(id: $id) {
+      id
+      payload
+      user {
+        username
+        avatar
+      }
+      read
+    }
+  }
+`;
+
 const SEND_MESSAGE_MUTATION = gql`
   mutation sendMessage($payload: String!, $roomId: Int, $userId: Int) {
     sendMessage(payload: $payload, roomId: $roomId, userId: $userId) {
@@ -73,12 +87,13 @@ const ROOM_QUERY = gql`
 `;
 
 const Room = ({ route, navigation }) => {
-  const { data, loading, refetch } = useQuery(ROOM_QUERY, {
+  const { data, loading, refetch, subscribeToMore } = useQuery(ROOM_QUERY, {
     variables: {
       id: route?.params?.id,
     },
   });
   const { data: meData } = useMe();
+  const [subscribe, setSubscribed] = useState(false);
   const { register, handleSubmit, setValue, getValues, watch } = useForm();
 
   // 방이 하나일 땐 cache가 Room:1 형태가 아닌 Room 이다.. 그래서 캐시가 잘 안먹음..
@@ -144,6 +159,59 @@ const Room = ({ route, navigation }) => {
   useEffect(() => {
     register('payload', { required: true });
   }, [register]);
+
+  const updateQuery = async (prevQuery, options) => {
+    const {
+      subscriptionData: {
+        data: { roomUpdates: message },
+      },
+    } = options;
+    if (message.id) {
+      const { cache } = client;
+      // const messageFragment = cache.writeFragment({
+      //   fragment: gql`
+      //     fragment NewMessage on Message {
+      //       id
+      //       payload
+      //       user {
+      //         username
+      //         avatar
+      //       }
+      //       read
+      //     }
+      //   `,
+      //   data: message,
+      // });
+      // cache.modify({
+      //   id: `Room:${route.params.id}`,
+      //   fields: {
+      //     messages(prev) {
+      //       const existingMessage = prev.find(
+      //         (aMessage) => aMessage.__ref === messageFragment.__ref
+      //       );
+      //       if (existingMessage) {
+      //         return prev;
+      //       }
+      //       return [...prev, messageFragment];
+      //     },
+      //   },
+      // });
+      await refetch();
+    }
+  };
+
+  useEffect(() => {
+    if (data?.seeRoom) {
+      subscribeToMore({
+        document: ROOM_UPDATES,
+        variables: {
+          id: route?.params?.id,
+        },
+        updateQuery,
+      });
+      setSubscribed(true);
+    }
+  }, [data, subscribe]);
 
   const onValid = ({ payload }) => {
     if (!sendLoading) {

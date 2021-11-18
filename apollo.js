@@ -32,12 +32,12 @@ const uploadHttpLink = createUploadLink({
 });
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://192.168.151.53:4000/subscriptions',
+  uri: 'ws://192.168.151.53:4000/graphql',
   options: {
     reconnect: true,
-    connectionParams: {
+    connectionParams: () => ({
       token: tokenVar(),
-    },
+    }),
   },
 });
 
@@ -45,6 +45,7 @@ export const logUserOut = async () => {
   await AsyncStorage.removeItem(TOKEN);
   isLoggedInVar(false);
   tokenVar(null);
+  client.resetStore();
 };
 
 const onErrorLink = onError(({ graphQLErrors, networkError }) => {

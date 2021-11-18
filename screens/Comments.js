@@ -83,7 +83,6 @@ const Comments = ({ navigation, route }) => {
       id: route?.params?.photoId,
     },
   });
-
   const [isFocus, setIsFocus] = useState(false);
   const {
     register,
