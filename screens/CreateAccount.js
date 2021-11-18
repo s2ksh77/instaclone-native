@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
+import { gql, useMutation } from '@apollo/client';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthButton from '../components/auth/AuthButton';
 import AuthLayout from '../components/auth/AuthLayout';
 import { TextInput } from '../components/auth/AuthShared';
-import FormError from '../components/auth/FormError';
-import { gql, useMutation } from '@apollo/client';
 
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccount(
@@ -28,13 +28,7 @@ const CREATE_ACCOUNT_MUTATION = gql`
 `;
 
 const CreateAccount = ({ navigation }) => {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, setValue, getValues } = useForm();
   const onCompleted = (data) => {
     const {
       createAccount: { ok },
@@ -51,15 +45,12 @@ const CreateAccount = ({ navigation }) => {
     onCompleted,
   });
   const lastNameRef = useRef();
-  const userNameRef = useRef();
+  const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
 
   const onNext = (nextOne) => {
     nextOne?.current?.focus();
-  };
-  const onDone = () => {
-    alert('done');
   };
 
   const onValid = (data) => {
@@ -81,10 +72,6 @@ const CreateAccount = ({ navigation }) => {
     });
     register('username', {
       required: true,
-      minLength: {
-        value: 5,
-        message: 'FirstName should be longer than 5 chars.',
-      },
     });
     register('email', {
       required: true,
@@ -93,11 +80,9 @@ const CreateAccount = ({ navigation }) => {
       required: true,
     });
   }, [register]);
-
   return (
     <AuthLayout>
       <TextInput
-        autoFocus
         placeholder="First Name"
         returnKeyType="next"
         onSubmitEditing={() => onNext(lastNameRef)}
@@ -108,24 +93,23 @@ const CreateAccount = ({ navigation }) => {
         ref={lastNameRef}
         placeholder="Last Name"
         returnKeyType="next"
-        onSubmitEditing={() => onNext(userNameRef)}
+        onSubmitEditing={() => onNext(usernameRef)}
         placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
         onChangeText={(text) => setValue('lastName', text)}
       />
       <TextInput
-        ref={userNameRef}
+        ref={usernameRef}
         placeholder="Username"
+        autoCapitalize="none"
         returnKeyType="next"
         onSubmitEditing={() => onNext(emailRef)}
         placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
         onChangeText={(text) => setValue('username', text)}
-        autoCapitalize={'none'}
-        hasError={Boolean(errors?.username?.message)}
       />
-      <FormError message={errors?.username?.message} />
       <TextInput
         ref={emailRef}
         placeholder="Email"
+        autoCapitalize="none"
         keyboardType="email-address"
         returnKeyType="next"
         onSubmitEditing={() => onNext(passwordRef)}
@@ -137,18 +121,18 @@ const CreateAccount = ({ navigation }) => {
         placeholder="Password"
         secureTextEntry
         returnKeyType="done"
-        onSubmitEditing={handleSubmit(onValid)}
         lastOne={true}
         placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
         onChangeText={(text) => setValue('password', text)}
+        onSubmitEditing={handleSubmit(onValid)}
       />
       <AuthButton
         text="Create Account"
         disabled={false}
         onPress={handleSubmit(onValid)}
-        loading
       />
     </AuthLayout>
   );
 };
+
 export default CreateAccount;
