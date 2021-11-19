@@ -21,7 +21,7 @@ const SEE_PHOTO = gql`
   ${PHOTO_FRAGMENT}
 `;
 
-const PhotoScreen = ({ navigation, route }) => {
+export default function PhotoScreen({ navigation, route }) {
   const { data, loading, refetch } = useQuery(SEE_PHOTO, {
     variables: {
       id: route?.params?.photoId,
@@ -51,5 +51,4 @@ const PhotoScreen = ({ navigation, route }) => {
       </ScrollView>
     </ScreenLayout>
   );
-};
-export default PhotoScreen;
+}

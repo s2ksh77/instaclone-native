@@ -75,7 +75,7 @@ const CREATE_COMMENT_MUTATION = gql`
   }
 `;
 
-const Comments = ({ navigation, route }) => {
+export default function Comments({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
   const inputRef = useRef(null);
   const { data, loading, refetch } = useQuery(COMMENTS_QUERY, {
@@ -201,6 +201,4 @@ const Comments = ({ navigation, route }) => {
       </InputWrapper>
     </ScreenLayout>
   );
-};
-
-export default Comments;
+}
