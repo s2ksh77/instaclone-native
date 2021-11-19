@@ -161,7 +161,7 @@ export default function Comments({ navigation, route }) {
             <Caption>{data?.seePhotoComments?.photo?.caption}</Caption>
           </Column>
         </Wrapper>
-        <FlatList
+        {/* <FlatList
           ItemSeparatorComponent={() => (
             <View
               style={{
@@ -177,7 +177,7 @@ export default function Comments({ navigation, route }) {
           renderItem={renderComment}
           refreshing={refreshing}
           onRefresh={onRefresh}
-        />
+        /> */}
       </CommentWrapper>
       {/* <InputWrapper>
         <AuthLayout isLogin={false}>
