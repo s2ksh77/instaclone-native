@@ -78,13 +78,12 @@ const CREATE_COMMENT_MUTATION = gql`
 export default function Comments({ navigation, route }) {
   // const [refreshing, setRefreshing] = useState(false);
   // const inputRef = useRef(null);
-  // const { data, loading, refetch } = useQuery(COMMENTS_QUERY, {
-  //   variables: {
-  //     id: route?.params?.photoId,
-  //   },
-  //   skip: !route?.params?.photoId,
-  // });
-
+  const { data, loading, refetch } = useQuery(COMMENTS_QUERY, {
+    variables: {
+      id: route?.params?.photoId,
+    },
+  });
+  alert(data);
   // const [isFocus, setIsFocus] = useState(false);
   // const {
   //   register,
