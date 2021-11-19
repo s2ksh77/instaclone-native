@@ -31,14 +31,14 @@ const uploadHttpLink = createUploadLink({
   uri:
     process.env.NODE_ENV === 'production'
       ? 'https://soostaclone-backend.herokuapp.com/graphql'
-      : 'http://localhost:4000/graphql',
+      : 'http://192.168.151.53:4000/graphql',
 });
 
 const wsLink = new WebSocketLink({
   uri:
     process.env.NODE_ENV === 'production'
       ? 'ws://soostaclone-backend.herokuapp.com/graphql'
-      : 'ws://localhost:4000/graphql',
+      : 'ws://192.168.151.53:4000/graphql',
   options: {
     reconnect: true,
     connectionParams: () => ({
