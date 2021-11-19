@@ -145,13 +145,20 @@ export default function Comments({ navigation, route }) {
   //   });
   // }, []);
 
+  useEffect(() => {
+    alert(data?.seePhotoComments);
+  }, []);
+
   // useEffect(() => {
   //   register('payload');
   // }, [register]);
 
   return (
     <ScreenLayout loading={loading} isStyle={false}>
-      <CommentWrapper isFocus={isFocus}>
+      <View>
+        <Text>what</Text>
+      </View>
+      {/* <CommentWrapper isFocus={isFocus}>
         <Wrapper>
           <Column>
             <Avatar source={{ uri: data?.seePhotoComments?.user?.avatar }} />
@@ -178,7 +185,7 @@ export default function Comments({ navigation, route }) {
           refreshing={refreshing}
           onRefresh={onRefresh}
         /> */}
-      </CommentWrapper>
+      </CommentWrapper> */}
       {/* <InputWrapper>
         <AuthLayout isLogin={false}>
           <Wrapper style={{ borderWidth: 0 }}>
