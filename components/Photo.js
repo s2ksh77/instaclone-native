@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
-import { Image, useWindowDimensions } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { gql, useMutation } from '@apollo/client';
-
-const TOGGLE_LIKE_MUTATION = gql`
-  mutation toggleLike($id: Int!) {
-    toggleLike(id: $id) {
-      ok
-      error
-    }
-  }
-`;
+import PropTypes from 'prop-types';
+import { FlatList, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { useNavigation } from '@react-navigation/core';
+import { COMMENTS_QUERY } from '../query';
+import CommentRow from './CommentRow';
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -45,7 +37,7 @@ const Caption = styled.View`
 `;
 const CaptionText = styled.Text`
   color: white;
-  margin-left: 5px;
+  margin-left: 10px;
 `;
 const Likes = styled.Text`
   color: white;
@@ -56,15 +48,26 @@ const ExtraContainer = styled.View`
   padding: 10px;
 `;
 
-function Photo({ id, user, caption, file, isLiked, likes }) {
+const TOGGLE_LIKE_MUTATION = gql`
+  mutation toggleLike($id: Int!) {
+    toggleLike(id: $id) {
+      ok
+      error
+    }
+  }
+`;
+
+const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
-  const [imageHeight, setImageHeight] = useState(height - 450);
+  const [imageHeight, setImageHeight] = useState(300);
+  const [moreComment, setMoreComment] = useState(false);
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      setImageHeight(height / 3);
+      setImageHeight((height * Swidth) / width);
     });
   }, [file]);
+
   const updateToggleLike = (cache, result) => {
     const {
       data: {
@@ -89,30 +92,51 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
       });
     }
   };
-  const [toggleLikeMutation] = useMutation(TOGGLE_LIKE_MUTATION, {
+  const [toggleLikeMutation, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
       id,
     },
     update: updateToggleLike,
   });
+
   const goToProfile = () => {
     navigation.navigate('Profile', {
-      username: user.username,
       id: user.id,
+      username: user.username,
     });
   };
+
+  const goToComments = () => {
+    alert(caption);
+    navigation.navigate('Comments', { photoId: id });
+  };
+
+  const goToLikes = () => {
+    navigation.navigate('Likes', { photoId: id });
+  };
+
+  const { data: commentsData } = useQuery(COMMENTS_QUERY, {
+    variables: {
+      id,
+    },
+  });
+
+  const moreComments = () => setMoreComment(!moreComment);
+  const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
+
+  useEffect(() => {
+    if (commentsData?.seePhotoComments?.length === 0) setMoreComment('');
+  }, []);
+
   return (
     <Container>
       <Header onPress={goToProfile}>
-        <UserAvatar resizeMode="cover" source={{ uri: user.avatar }} />
-        <Username>{user.username}</Username>
+        <UserAvatar resizeMode="cover" source={{ uri: user?.avatar }} />
+        <Username>{user?.username}</Username>
       </Header>
       <File
-        resizeMode="cover"
-        style={{
-          width,
-          height: imageHeight,
-        }}
+        resizeMode="contain"
+        style={{ width, height: imageHeight }}
         source={{ uri: file }}
       />
       <ExtraContainer>
@@ -124,46 +148,49 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
               size={22}
             />
           </Action>
-          <Action
-            onPress={() =>
-              navigation.navigate('Comments', {
-                photoId: id,
-              })
-            }
-          >
+          <Action onPress={goToComments}>
             <Ionicons name="chatbubble-outline" color="white" size={22} />
           </Action>
         </Actions>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('Likes', {
-              photoId: id,
-            })
-          }
-        >
+        <TouchableOpacity onPress={goToLikes}>
           <Likes>{likes === 1 ? '1 like' : `${likes} likes`}</Likes>
         </TouchableOpacity>
         <Caption>
           <TouchableOpacity onPress={goToProfile}>
-            <Username>{user.username}</Username>
+            <Username>{user?.username}</Username>
           </TouchableOpacity>
           <CaptionText>{caption}</CaptionText>
         </Caption>
+        <Caption>
+          <TouchableOpacity onPress={moreComments}>
+            <CaptionText>
+              {moreComment ? '숨기기' : moreComment === '' ? null : '더 보기'}
+            </CaptionText>
+          </TouchableOpacity>
+        </Caption>
+        {moreComment ? (
+          <FlatList
+            data={commentsData?.seePhotoComments}
+            keyExtractor={(comment) => '' + comment.id}
+            renderItem={renderComment}
+          />
+        ) : null}
       </ExtraContainer>
     </Container>
   );
-}
+};
 
 Photo.propTypes = {
   id: PropTypes.number.isRequired,
   user: PropTypes.shape({
     avatar: PropTypes.string,
-    username: PropTypes.string.isRequired,
+    username: PropTypes.string,
   }),
   caption: PropTypes.string,
-  file: PropTypes.string.isRequired,
-  isLiked: PropTypes.bool.isRequired,
-  likes: PropTypes.number.isRequired,
+  file: PropTypes.string,
+  isLiked: PropTypes.bool,
+  likes: PropTypes.number,
   commentNumber: PropTypes.number,
 };
+
 export default Photo;
