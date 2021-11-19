@@ -27,6 +27,7 @@ const PhotoScreen = ({ navigation, route }) => {
       id: route?.params?.photoId,
     },
   });
+  alert(data);
   const [refresing, setRefreshing] = useState(false);
   const onRefresh = async () => {
     setRefreshing(true);

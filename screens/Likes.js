@@ -1,9 +1,8 @@
-import React from 'react';
-import { FlatList, Text, View } from 'react-native';
-import { gql, useQuery, useReactiveVar } from '@apollo/client';
+import React, { useState } from 'react';
+import { Text, View, FlatList } from 'react-native';
+import { gql, useQuery } from '@apollo/client';
 import { USER_FRAGMENT } from '../fragments';
 import ScreenLayout from '../components/ScreenLayout';
-import { useState } from 'react/cjs/react.development';
 import UserRow from '../components/UserRow';
 
 const LIKES_QUERY = gql`
@@ -15,7 +14,7 @@ const LIKES_QUERY = gql`
   ${USER_FRAGMENT}
 `;
 
-const Likes = ({ route }) => {
+export default function Likes({ route }) {
   const [refreshing, setRefreshing] = useState(false);
   const { data, loading, refetch } = useQuery(LIKES_QUERY, {
     variables: {
@@ -24,31 +23,32 @@ const Likes = ({ route }) => {
     skip: !route?.params?.photoId,
   });
 
+  alert(data);
   const renderUser = ({ item: user }) => <UserRow {...user} />;
-
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
     setRefreshing(false);
   };
-
   return (
     <ScreenLayout loading={loading}>
       <FlatList
         ItemSeparatorComponent={() => (
           <View
-            style={{ width: '100%', height: 1, backgroundColor: 'rgba(255,255,255,0.2)' }}
-          />
+            style={{
+              width: '100%',
+              height: 1,
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            }}
+          ></View>
         )}
-        style={{ width: '100%' }}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         data={data?.seePhotoLikes}
         keyExtractor={(item) => '' + item.id}
         renderItem={renderUser}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
+        style={{ width: '100%' }}
       />
     </ScreenLayout>
   );
-};
-
-export default Likes;
+}
