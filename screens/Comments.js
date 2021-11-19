@@ -76,29 +76,29 @@ const CREATE_COMMENT_MUTATION = gql`
 `;
 
 export default function Comments({ navigation, route }) {
-  // const [refreshing, setRefreshing] = useState(false);
-  // const inputRef = useRef(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
+  const inputRef = useRef(null);
   const { data, loading, refetch } = useQuery(COMMENTS_QUERY, {
     variables: {
       id: route?.params?.photoId,
     },
   });
-  alert(data);
-  // const [isFocus, setIsFocus] = useState(false);
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   setValue,
-  //   getValues,
-  //   formState: { errors },
-  //   watch,
-  //   reset,
-  // } = useForm({
-  //   defaultValues: {
-  //     payload: '',
-  //   },
-  // });
-  // const { data: userData } = useMe();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+    watch,
+    reset,
+  } = useForm({
+    defaultValues: {
+      payload: '',
+    },
+  });
+  const { data: userData } = useMe();
 
   // const createCommentUpdate = async (cache, result) => {
   //   const { payload } = getValues();
@@ -131,13 +131,13 @@ export default function Comments({ navigation, route }) {
   //   });
   // };
 
-  // const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
+  const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
 
-  // const onRefresh = async () => {
-  //   setRefreshing(true);
-  //   await refetch();
-  //   setRefreshing(false);
-  // };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   // useEffect(() => {
   //   navigation.setOptions({
@@ -150,58 +150,55 @@ export default function Comments({ navigation, route }) {
   // }, [register]);
 
   return (
-    <View>
-      <Text>here?</Text>
-    </View>
-    // <ScreenLayout loading={loading} isStyle={false}>
-    //   <CommentWrapper isFocus={isFocus}>
-    //     <Wrapper>
-    //       <Column>
-    //         <Avatar source={{ uri: route?.params?.avatar }} />
-    //         <Username>{route?.params?.username}</Username>
-    //       </Column>
-    //       <Column>
-    //         <Caption>{route?.params?.caption}</Caption>
-    //       </Column>
-    //     </Wrapper>
-    //     <FlatList
-    //       ItemSeparatorComponent={() => (
-    //         <View
-    //           style={{
-    //             width: '100%',
-    //             height: 1,
-    //             backgroundColor: 'rgba(255,255,255,0.2)',
-    //           }}
-    //         />
-    //       )}
-    //       style={{ width: '100%' }}
-    //       data={data?.seePhotoComments}
-    //       keyExtractor={(item) => '' + item.id}
-    //       renderItem={renderComment}
-    //       refreshing={refreshing}
-    //       onRefresh={onRefresh}
-    //     />
-    //   </CommentWrapper>
-    //   <InputWrapper>
-    //     <AuthLayout isLogin={false}>
-    //       <Wrapper style={{ borderWidth: 0 }}>
-    //         <Avatar source={{ uri: userData?.me?.avatar }} />
-    //         <TextInput
-    //           ref={inputRef}
-    //           placeholder="댓글 달기"
-    //           onSubmitEditing={handleSubmit(onValid)}
-    //           placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
-    //           onChangeText={(text) => setValue('payload', text)}
-    //           style={{ width: '75%' }}
-    //           onFocus={() => setIsFocus(true)}
-    //           onBlur={() => setIsFocus(false)}
-    //         />
-    //         <Button onPress={handleSubmit(onValid)}>
-    //           <ButtonText>게시</ButtonText>
-    //         </Button>
-    //       </Wrapper>
-    //     </AuthLayout>
-    //   </InputWrapper>
-    // </ScreenLayout>
+    <ScreenLayout loading={loading} isStyle={false}>
+      <CommentWrapper isFocus={isFocus}>
+        <Wrapper>
+          <Column>
+            <Avatar source={{ uri: data?.seePhotoComments?.user?.avatar }} />
+            <Username>{data?.seePhotoComments?.user?.username}</Username>
+          </Column>
+          <Column>
+            <Caption>{data?.seePhotoComments?.photo?.caption}</Caption>
+          </Column>
+        </Wrapper>
+        <FlatList
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                width: '100%',
+                height: 1,
+                backgroundColor: 'rgba(255,255,255,0.2)',
+              }}
+            />
+          )}
+          style={{ width: '100%' }}
+          data={data?.seePhotoComments}
+          keyExtractor={(item) => '' + item.id}
+          renderItem={renderComment}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      </CommentWrapper>
+      {/* <InputWrapper>
+        <AuthLayout isLogin={false}>
+          <Wrapper style={{ borderWidth: 0 }}>
+            <Avatar source={{ uri: userData?.me?.avatar }} />
+            <TextInput
+              ref={inputRef}
+              placeholder="댓글 달기"
+              onSubmitEditing={handleSubmit(onValid)}
+              placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
+              onChangeText={(text) => setValue('payload', text)}
+              style={{ width: '75%' }}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+            />
+            <Button onPress={handleSubmit(onValid)}>
+              <ButtonText>게시</ButtonText>
+            </Button>
+          </Wrapper>
+        </AuthLayout>
+      </InputWrapper> */}
+    </ScreenLayout>
   );
 }
