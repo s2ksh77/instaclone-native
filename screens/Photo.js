@@ -28,7 +28,6 @@ export default function PhotoScreen({ navigation, route }) {
     },
     skip: !route?.params?.photoId,
   });
-  alert(data);
   const [refresing, setRefreshing] = useState(false);
   const onRefresh = async () => {
     setRefreshing(true);

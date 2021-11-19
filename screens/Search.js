@@ -81,14 +81,14 @@ const Search = ({ navigation }) => {
     });
   });
 
-  const goToPhoto = () => {
+  const goToPhoto = (photo) => {
     navigation.navigate('Photo', {
       photoId: photo.id,
     });
   };
 
   const renderItem = ({ item: photo }) => (
-    <TouchableOpacity onPress={goToPhoto}>
+    <TouchableOpacity onPress={goToPhoto(photo)}>
       <Image
         source={{ uri: photo.file }}
         style={{ width: width / nubColumns, height: 100 }}

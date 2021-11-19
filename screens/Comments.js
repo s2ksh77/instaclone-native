@@ -84,7 +84,7 @@ export default function Comments({ navigation, route }) {
     },
     skip: !route?.params?.photoId,
   });
-  alert(data);
+
   const [isFocus, setIsFocus] = useState(false);
   const {
     register,
