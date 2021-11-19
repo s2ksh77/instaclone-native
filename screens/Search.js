@@ -89,7 +89,13 @@ const Search = ({ navigation }) => {
   };
 
   const renderItem = ({ item: photo }) => (
-    <TouchableOpacity onPress={goToPhoto(photo)}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('Photo', {
+          photoId: photo.id,
+        })
+      }
+    >
       <Image
         source={{ uri: photo.file }}
         style={{ width: width / nubColumns, height: 100 }}
