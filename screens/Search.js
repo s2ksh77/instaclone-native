@@ -82,10 +82,9 @@ const Search = ({ navigation }) => {
   });
 
   const goToPhoto = (photo) => {
-    alert(navigation);
-    // navigation.navigate('Photo', {
-    //   photoId: photo.id,
-    // });
+    navigation.navigate('Photo', {
+      photoId: photo.id,
+    });
   };
 
   const renderItem = ({ item: photo }) => (

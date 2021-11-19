@@ -107,7 +107,12 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   };
 
   const goToComments = () => {
-    navigation.navigate('Comments', { photoId: id });
+    navigation.navigate('Comments', {
+      photoId: id,
+      username: user.username,
+      avatar: user.avatar,
+      caption,
+    });
   };
 
   const goToLikes = () => {
