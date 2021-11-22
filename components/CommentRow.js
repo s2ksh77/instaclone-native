@@ -8,6 +8,7 @@ import { gql, useMutation } from '@apollo/client';
 const Column = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
+  width: 100%;
 `;
 const Avatar = styled.Image`
   width: 40px;
@@ -39,17 +40,19 @@ const ButtonText = styled.Text`
   font-weight: 600;
 `;
 
-const CommentWrapper = styled.View`
-  flex-direction: row;
-`;
-
 const Comment = styled.Text`
   color: white;
   margin: 0px 20px 0px 20px;
-  width: ${(props) => props.width - 160};
 `;
 
-const RowWrapper = styled.View`
+const CommentWrapper = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+`;
+
+const UserWrapper = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -101,18 +104,18 @@ const CommentRow = ({ id, payload, isMine, createdAt, updatedAt, photo, user }) 
   return (
     <Wrapper width={width}>
       <Column>
-        <RowWrapper>
+        <UserWrapper>
           <Avatar source={{ uri: user?.avatar }} />
           <Username>{user?.username}</Username>
-        </RowWrapper>
-        <RowWrapper>
-          <Comment width={width}>{payload}</Comment>
+        </UserWrapper>
+        <CommentWrapper>
+          <Comment>{payload}</Comment>
           {isMine ? (
             <Button onPress={deleteCommentFn}>
               <ButtonText>✖</ButtonText>
             </Button>
           ) : null}
-        </RowWrapper>
+        </CommentWrapper>
       </Column>
     </Wrapper>
   );
