@@ -119,18 +119,21 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     navigation.navigate('Likes', { photoId: id });
   };
 
+  const callback = (data) => {
+    if (data?.seePhotoComments?.length === 0) setMoreComment('');
+  };
+
   const { data: commentsData } = useQuery(COMMENTS_QUERY, {
     variables: {
       id,
     },
+    onCompleted: callback(commentsData),
   });
 
   const moreComments = () => setMoreComment(!moreComment);
   const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
 
-  useEffect(() => {
-    if (commentsData?.seePhotoComments?.length === 0) setMoreComment('');
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Container>
