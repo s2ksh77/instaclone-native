@@ -122,7 +122,7 @@ const Comments = ({ photoId }) => {
   return (
     <OutWrapper>
       <DataWrapper>
-        {data?.seePhotoComments?.length > 0 ? (
+        {data?.seePhotoComments?.length > 0 && (
           <FlatList
             ItemSeparatorComponent={() => (
               <View
@@ -138,7 +138,7 @@ const Comments = ({ photoId }) => {
             keyExtractor={(item) => '' + item.id}
             renderItem={renderComment}
           />
-        ) : null}
+        )}
       </DataWrapper>
       <InputWrapper>
         <AuthLayout isLogin={false}>
