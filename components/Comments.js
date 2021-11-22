@@ -117,21 +117,23 @@ const Comments = ({ photoId }) => {
 
   return (
     <OutWrapper>
-      <FlatList
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              width: '100%',
-              height: 1,
-              backgroundColor: 'rgba(255,255,255,0.2)',
-            }}
-          />
-        )}
-        style={{ width: '100%' }}
-        data={data?.seePhotoComments}
-        keyExtractor={(item) => '' + item.id}
-        renderItem={renderComment}
-      />
+      {data?.seePhotoComments?.length > 0 ? (
+        <FlatList
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                width: '100%',
+                height: 1,
+                backgroundColor: 'rgba(255,255,255,0.2)',
+              }}
+            />
+          )}
+          style={{ width: '100%' }}
+          data={data?.seePhotoComments}
+          keyExtractor={(item) => '' + item.id}
+          renderItem={renderComment}
+        />
+      ) : null}
       <InputWrapper>
         <AuthLayout isLogin={false}>
           <Wrapper style={{ borderWidth: 0 }}>
