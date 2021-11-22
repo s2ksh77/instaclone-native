@@ -1,11 +1,9 @@
-import { useNavigation } from '@react-navigation/core';
 import React from 'react';
+import { useNavigation } from '@react-navigation/core';
 import { useWindowDimensions } from 'react-native';
 import styled from 'styled-components/native';
-import { colors } from '../colors';
 import useMe from '../hooks/useMe';
-import { FOLLOW_USER_MUTATION, UNFOLLOW_USER_MUTATION } from '../query';
-import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 
 const Column = styled.TouchableOpacity`
   flex-direction: row;

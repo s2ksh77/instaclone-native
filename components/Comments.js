@@ -1,17 +1,13 @@
-import React, { useRef } from 'react';
-import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import React, { useRef, useEffect, useState } from 'react';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import ScreenLayout from '../components/ScreenLayout';
-import { useEffect, useState } from 'react/cjs/react.development';
-import UserRow from '../components/UserRow';
 import CommentRow from '../components/CommentRow';
 import styled, { css } from 'styled-components/native';
-import { useNavigation } from '@react-navigation/core';
 import { COMMENTS_QUERY } from '../query';
 import AuthLayout from '../components/auth/AuthLayout';
 import { TextInput } from '../components/auth/AuthShared';
 import { useForm } from 'react-hook-form';
 import useMe from '../hooks/useMe';
-import AuthButton from '../components/auth/AuthButton';
 import { FlatList, Keyboard, View } from 'react-native';
 
 const Header = styled.View`

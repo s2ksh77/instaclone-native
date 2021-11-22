@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import ScreenLayout from '../components/ScreenLayout';
 import styled from 'styled-components/native';
 import Comments from '../components/Comments';
-import { RefreshControl, ScrollView } from 'react-native';
-import { COMMENTS_QUERY } from '../query';
 
 const Avatar = styled.Image`
   width: 40px;
