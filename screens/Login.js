@@ -64,7 +64,7 @@ const Login = ({ route: { params } }) => {
     <AuthLayout>
       <TextInput
         value={watch('username')}
-        placeholder="Username"
+        placeholder="아이디"
         returnKeyType="next"
         placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
         onSubmitEditing={() => onNext(passwordRef)}
@@ -74,7 +74,7 @@ const Login = ({ route: { params } }) => {
       <TextInput
         value={watch('password')}
         ref={passwordRef}
-        placeholder="Password"
+        placeholder="비밀번호"
         secureTextEntry
         returnKeyType="done"
         lastOne={true}
@@ -83,7 +83,7 @@ const Login = ({ route: { params } }) => {
         onChangeText={(text) => setValue('password', text)}
       />
       <AuthButton
-        text="Log In"
+        text="로그인"
         loading={loading}
         disabled={!watch('username') || !watch('password')}
         onPress={handleSubmit(onValid)}

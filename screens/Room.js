@@ -152,7 +152,7 @@ const Room = ({ route, navigation }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: `Conversation with ${route?.params?.talkingTo?.username}`,
+      title: `${route?.params?.talkingTo?.username} 와 대화방`,
     });
   }, []);
 

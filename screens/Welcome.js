@@ -17,9 +17,9 @@ const Welcome = ({ navigation }) => {
   const goToLogin = () => navigation.navigate('Login');
   return (
     <AuthLayout>
-      <AuthButton disabled={false} text="Create Account" onPress={goToCreateAccount} />
+      <AuthButton disabled={false} text="계정 생성" onPress={goToCreateAccount} />
       <TouchableOpacity onPress={goToLogin}>
-        <LoginLink>Log In</LoginLink>
+        <LoginLink>로그인</LoginLink>
       </TouchableOpacity>
     </AuthLayout>
   );

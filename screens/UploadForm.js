@@ -110,7 +110,7 @@ const UploadForm = ({ route, navigation }) => {
         />
         <CaptionContainer>
           <Caption
-            placeholder="Write a caption"
+            placeholder="내용을 적으세요."
             placeholderTextColor="rgba(0,0,0,0.5)"
             onChangeText={(text) => setValue('caption', text)}
             onSubmitEditing={handleSubmit(onValid)}

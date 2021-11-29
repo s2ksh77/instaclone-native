@@ -83,7 +83,7 @@ const CreateAccount = ({ navigation }) => {
   return (
     <AuthLayout>
       <TextInput
-        placeholder="First Name"
+        placeholder="성"
         returnKeyType="next"
         onSubmitEditing={() => onNext(lastNameRef)}
         placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
@@ -91,7 +91,7 @@ const CreateAccount = ({ navigation }) => {
       />
       <TextInput
         ref={lastNameRef}
-        placeholder="Last Name"
+        placeholder="이름"
         returnKeyType="next"
         onSubmitEditing={() => onNext(usernameRef)}
         placeholderTextColor={'rgba(255, 255, 255, 0.6)'}
@@ -99,7 +99,7 @@ const CreateAccount = ({ navigation }) => {
       />
       <TextInput
         ref={usernameRef}
-        placeholder="Username"
+        placeholder="아이디"
         autoCapitalize="none"
         returnKeyType="next"
         onSubmitEditing={() => onNext(emailRef)}
@@ -108,7 +108,7 @@ const CreateAccount = ({ navigation }) => {
       />
       <TextInput
         ref={emailRef}
-        placeholder="Email"
+        placeholder="이메일"
         autoCapitalize="none"
         keyboardType="email-address"
         returnKeyType="next"
@@ -118,7 +118,7 @@ const CreateAccount = ({ navigation }) => {
       />
       <TextInput
         ref={passwordRef}
-        placeholder="Password"
+        placeholder="비밀번호"
         secureTextEntry
         returnKeyType="done"
         lastOne={true}
@@ -126,11 +126,7 @@ const CreateAccount = ({ navigation }) => {
         onChangeText={(text) => setValue('password', text)}
         onSubmitEditing={handleSubmit(onValid)}
       />
-      <AuthButton
-        text="Create Account"
-        disabled={false}
-        onPress={handleSubmit(onValid)}
-      />
+      <AuthButton text="계정 생성" disabled={false} onPress={handleSubmit(onValid)} />
     </AuthLayout>
   );
 };

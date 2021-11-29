@@ -44,11 +44,7 @@ const AuthLayout = ({ children, isLogin = true }) => {
       disabled={Platform.OS === 'web'}
     >
       <Container isLogin={isLogin}>
-        <KeyboardAvoidingView
-          style={{ width: isLogin ? '100%' : width }}
-          behavior="padding"
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 50}
-        >
+        <KeyboardAvoidingView style={{ width: isLogin ? '100%' : width }}>
           {isLogin ? (
             <Logo
               isLogin={isLogin}

@@ -1,15 +1,9 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Feed from "../screens/Feed";
-import Search from "../screens/Search";
-import Notifications from "../screens/Notifications";
-import Profile from "../screens/Profile";
-import { Ionicons } from "@expo/vector-icons";
-import { Image, View } from "react-native";
-import TabIcon from "../components/auth/nav/TabIcon";
-import Me from "../screens/Me";
-import SharedStackNav from "./SharedStackNav";
-import useMe from "../hooks/useMe";
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Image, View } from 'react-native';
+import TabIcon from '../components/auth/nav/TabIcon';
+import SharedStackNav from './SharedStackNav';
+import useMe from '../hooks/useMe';
 
 const Tabs = createBottomTabNavigator();
 
@@ -21,10 +15,10 @@ const TabsNav = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: "white",
+        tabBarActiveTintColor: 'white',
         tabBarStyle: {
-          backgroundColor: "black",
-          borderTopColor: "rgba(255,255,255, 0.3)",
+          backgroundColor: 'black',
+          borderTopColor: 'rgba(255,255,255, 0.3)',
         },
       }}
     >
@@ -32,7 +26,7 @@ const TabsNav = () => {
         name="Feed"
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon iconName={"home"} color={color} focused={focused} />
+            <TabIcon iconName={'home'} color={color} focused={focused} />
           ),
         }}
       >
@@ -42,7 +36,7 @@ const TabsNav = () => {
         name="Search"
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon iconName={"search"} color={color} focused={focused} />
+            <TabIcon iconName={'search'} color={color} focused={focused} />
           ),
         }}
       >
@@ -55,13 +49,13 @@ const TabsNav = () => {
           return {
             tabPress: (e) => {
               e.preventDefault();
-              navigation.navigate("Upload");
+              navigation.navigate('Upload');
             },
           };
         }}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon iconName={"camera"} color={color} focused={focused} />
+            <TabIcon iconName={'camera'} color={color} focused={focused} />
           ),
         }}
       />
@@ -69,7 +63,7 @@ const TabsNav = () => {
         name="Notifications"
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon iconName={"heart"} color={color} focused={focused} />
+            <TabIcon iconName={'heart'} color={color} focused={focused} />
           ),
         }}
       >
@@ -86,12 +80,12 @@ const TabsNav = () => {
                   width: 20,
                   height: 20,
                   borderRadius: 10,
-                  ...(focused && { borderColor: "white", borderWidth: 1 }),
+                  ...(focused && { borderColor: 'white', borderWidth: 1 }),
                 }}
                 source={{ uri: data?.me?.avatar }}
               />
             ) : (
-              <TabIcon iconName={"person"} color={color} focused={focused} />
+              <TabIcon iconName={'person'} color={color} focused={focused} />
             ),
         }}
       >

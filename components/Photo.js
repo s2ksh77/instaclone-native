@@ -119,21 +119,20 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     navigation.navigate('Likes', { photoId: id });
   };
 
-  const callback = (data) => {
-    if (data?.seePhotoComments?.length === 0) setMoreComment('');
-  };
-
   const { data: commentsData } = useQuery(COMMENTS_QUERY, {
     variables: {
       id,
     },
-    onCompleted: callback(commentsData),
   });
 
   const moreComments = () => setMoreComment(!moreComment);
   const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    navigation.setOptions({
+      title: '',
+    });
+  }, []);
 
   return (
     <Container>
@@ -171,11 +170,15 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         <Caption>
           <TouchableOpacity onPress={moreComments}>
             <CaptionText>
-              {moreComment ? '숨기기' : moreComment === '' ? null : '더 보기'}
+              {commentsData?.seePhotoComments?.length > 0
+                ? moreComment
+                  ? '숨기기'
+                  : '더 보기'
+                : null}
             </CaptionText>
           </TouchableOpacity>
         </Caption>
-        {moreComment ? (
+        {moreComment === true ? (
           <FlatList
             data={commentsData?.seePhotoComments}
             keyExtractor={(comment) => '' + comment.id}
@@ -188,7 +191,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
 };
 
 Photo.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.number,
   user: PropTypes.shape({
     avatar: PropTypes.string,
     username: PropTypes.string,
