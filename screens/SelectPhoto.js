@@ -48,7 +48,13 @@ const SelectPhoto = ({ navigation }) => {
   const { width } = useWindowDimensions();
 
   const getPhotos = async () => {
-    const { assets: photos } = await MediaLibrary.getAssetsAsync();
+    const album = await MediaLibrary.getAlbumsAsync();
+    const { assets: photos } = await MediaLibrary.getAssetsAsync({
+      first: 40,
+      album,
+      sortBy: ['creationTime'],
+      mediaType: ['photo', 'video'],
+    });
     setPhotos(photos);
     setChosenPhoto(photos[0]?.uri);
   };

@@ -13,6 +13,8 @@ import {
 import styled from 'styled-components/native';
 import DismissKeyboard from '../components/DismissKeyboard';
 import { gql, useLazyQuery } from '@apollo/client';
+import { USER_FRAGMENT } from '../fragments';
+import UserRow from '../components/UserRow';
 
 const Input = styled.TextInput`
   background-color: rgba(255, 255, 255, 1);
@@ -42,14 +44,35 @@ const SEARCH_PHOTOS = gql`
   }
 `;
 
+const SEARCH_USERS = gql`
+  query searchUsers($keyword: String!) {
+    searchUsers(keyword: $keyword) {
+      ...UserFragment
+    }
+  }
+  ${USER_FRAGMENT}
+`;
+
 const Search = ({ navigation }) => {
   const nubColumns = 4;
   const { width } = useWindowDimensions();
   const { register, setValue, watch, handleSubmit } = useForm();
-  const [startQueryFn, { loading, data, called }] = useLazyQuery(SEARCH_PHOTOS);
+  const onCompleted = () => setValue('keyword', '');
+
+  const [startQueryFn, { loading, data, called }] = useLazyQuery(SEARCH_PHOTOS, {
+    onCompleted,
+  });
+  const [searchUserQuery, { data: userData }] = useLazyQuery(SEARCH_USERS, {
+    onCompleted,
+  });
 
   const onValid = ({ keyword }) => {
     startQueryFn({
+      variables: {
+        keyword,
+      },
+    });
+    searchUserQuery({
       variables: {
         keyword,
       },
@@ -61,7 +84,8 @@ const Search = ({ navigation }) => {
       width={width}
       style={{ backgroundColor: 'white' }}
       placeholderTextColor="rgba(0,0,0,0.8)"
-      placeholder="Search Photos"
+      placeholder="검색"
+      value={watch('keyword')}
       autoCapitalize="none"
       returnKeyLabel="Search"
       returnKeyType="search"
@@ -78,14 +102,9 @@ const Search = ({ navigation }) => {
     register('keyword', {
       required: true,
       minLength: 1,
+      setValueAs: null,
     });
   });
-
-  const goToPhoto = (photo) => {
-    navigation.navigate('Photo', {
-      photoId: photo.id,
-    });
-  };
 
   const renderItem = ({ item: photo }) => (
     <TouchableOpacity
@@ -102,6 +121,8 @@ const Search = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  const renderUserItem = ({ item: user }) => <UserRow {...user} />;
+
   return (
     <DismissKeyboard>
       <View
@@ -113,20 +134,32 @@ const Search = ({ navigation }) => {
         {loading ? (
           <MessageContainer>
             <ActivityIndicator size="large" />
-            <MessageText>Searching....</MessageText>
+            <MessageText>검색 중....</MessageText>
           </MessageContainer>
         ) : null}
         {!called ? (
           <MessageContainer>
-            <MessageText>Search by keyword</MessageText>
+            <MessageText>검색 하세요.</MessageText>
           </MessageContainer>
         ) : null}
+        {userData?.searchUsers !== undefined ? (
+          userData?.searchUsers?.length === 0 ? null : (
+            <View
+              style={{
+                flex: 0,
+                backgroundColor: 'black',
+              }}
+            >
+              <FlatList
+                data={userData?.searchUsers}
+                keyExtractor={(user) => '' + user.id}
+                renderItem={renderUserItem}
+              />
+            </View>
+          )
+        ) : null}
         {data?.searchPhotos !== undefined ? (
-          data?.searchPhotos?.length === 0 ? (
-            <MessageContainer>
-              <MessageText>Could not find anything</MessageText>
-            </MessageContainer>
-          ) : (
+          data?.searchPhotos?.length === 0 ? null : (
             <FlatList
               numColumns={nubColumns}
               data={data?.searchPhotos}
