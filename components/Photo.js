@@ -128,12 +128,6 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const moreComments = () => setMoreComment(!moreComment);
   const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
 
-  useEffect(() => {
-    navigation.setOptions({
-      title: '',
-    });
-  }, []);
-
   return (
     <Container>
       <Header onPress={goToProfile}>

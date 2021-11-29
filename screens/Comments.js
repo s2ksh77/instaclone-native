@@ -39,12 +39,6 @@ export default function CommentsScreen({ navigation, route }) {
   const [isFocus, setIsFocus] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    navigation.setOptions({
-      title: '댓글',
-    });
-  }, []);
-
   return (
     <ScreenLayout isStyle={false}>
       <CommentWrapper isFocus={isFocus}>

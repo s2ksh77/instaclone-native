@@ -53,9 +53,13 @@ const SharedStackNav = ({ screenName }) => {
       ) : null}
       {screenName === 'Me' ? <Stack.Screen name={'Me'} component={Me} /> : null}
       <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="Photo" component={PhotoScreen} />
-      <Stack.Screen name="Likes" component={Likes} />
-      <Stack.Screen name="Comments" component={CommentsScreen} />
+      <Stack.Screen name="Photo" options={{ headerTitle: '' }} component={PhotoScreen} />
+      <Stack.Screen name="Likes" options={{ headerTitle: '좋아요' }} component={Likes} />
+      <Stack.Screen
+        name="Comments"
+        options={{ headerTitle: '댓글' }}
+        component={CommentsScreen}
+      />
     </Stack.Navigator>
   );
 };
