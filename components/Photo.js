@@ -122,11 +122,11 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     navigation.navigate('Likes', { photoId: id });
   };
 
-  // const { data: commentsData } = useQuery(COMMENTS_QUERY, {
-  //   variables: {
-  //     id,
-  //   },
-  // });
+  const { data: commentsData } = useQuery(COMMENTS_QUERY, {
+    variables: {
+      id,
+    },
+  });
 
   const moreComments = () => setMoreComment(!moreComment);
   const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
@@ -167,21 +167,21 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         <Caption>
           <TouchableOpacity onPress={moreComments}>
             <CaptionText>
-              {/* {commentsData?.seePhotoComments?.length > 0
+              {commentsData?.seePhotoComments?.length > 0
                 ? moreComment
                   ? '숨기기'
                   : '더 보기'
-                : null} */}
+                : null}
             </CaptionText>
           </TouchableOpacity>
         </Caption>
-        {/* {moreComment ? (
+        {moreComment ? (
           <FlatList
             data={commentsData?.seePhotoComments}
             keyExtractor={(comment) => '' + comment.id}
             renderItem={renderComment}
           />
-        ) : null} */}
+        ) : null}
       </ExtraContainer>
     </Container>
   );
