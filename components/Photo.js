@@ -62,9 +62,10 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const { width, height } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
   const [moreComment, setMoreComment] = useState(false);
+
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      setImageHeight(height / 3);
+      setImageHeight(height / 4);
     });
   }, [file]);
 
@@ -139,7 +140,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         style={{ width, height: imageHeight }}
         source={{ uri: file }}
       />
-      <ExtraContainer>
+      {/* <ExtraContainer>
         <Actions>
           <Action onPress={toggleLikeMutation}>
             <Ionicons
@@ -159,7 +160,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
           <TouchableOpacity onPress={goToProfile}>
             <Username>{user?.username}</Username>
           </TouchableOpacity>
-          <CaptionText>{caption}</CaptionText>
+          <CaptionText>{caption ? caption : ''}</CaptionText>
         </Caption>
         <Caption>
           <TouchableOpacity onPress={moreComments}>
@@ -172,14 +173,14 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
             </CaptionText>
           </TouchableOpacity>
         </Caption>
-        {moreComment === true ? (
+        {moreComment ? (
           <FlatList
             data={commentsData?.seePhotoComments}
             keyExtractor={(comment) => '' + comment.id}
             renderItem={renderComment}
           />
         ) : null}
-      </ExtraContainer>
+      </ExtraContainer> */}
     </Container>
   );
 };
@@ -194,7 +195,6 @@ Photo.propTypes = {
   file: PropTypes.string,
   isLiked: PropTypes.bool,
   likes: PropTypes.number,
-  commentNumber: PropTypes.number,
 };
 
 export default Photo;
