@@ -69,8 +69,6 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     });
   }, [file]);
 
-  console.log(id, caption, file, isLiked, likes);
-
   const updateToggleLike = (cache, result) => {
     const {
       data: {
@@ -122,14 +120,14 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     navigation.navigate('Likes', { photoId: id });
   };
 
-  // const { data: commentsData, loading: commentsLoading } = useQuery(COMMENTS_QUERY, {
-  //   variables: {
-  //     id,
-  //   },
-  // });
+  const { data: commentsData, loading: commentsLoading } = useQuery(COMMENTS_QUERY, {
+    variables: {
+      id,
+    },
+  });
 
-  // const moreComments = () => setMoreComment(!moreComment);
-  // const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
+  const moreComments = () => setMoreComment(!moreComment);
+  const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
 
   return (
     <Container>
@@ -164,7 +162,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
           </TouchableOpacity>
           <CaptionText>{caption ? caption : ''}</CaptionText>
         </Caption>
-        {/* <Caption>
+        <Caption>
           <TouchableOpacity onPress={moreComments}>
             <CaptionText>
               {commentsData?.seePhotoComments?.length > 0
@@ -175,13 +173,13 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
             </CaptionText>
           </TouchableOpacity>
         </Caption>
-        {moreComment ? (
+        {moreComment && commentsData?.seePhotoComments?.length > 0 ? (
           <FlatList
             data={commentsData?.seePhotoComments}
             keyExtractor={(comment) => '' + comment.id}
             renderItem={renderComment}
           />
-        ) : null} */}
+        ) : null}
       </ExtraContainer>
     </Container>
   );
