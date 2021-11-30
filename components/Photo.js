@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
-import { Image, useWindowDimensions } from 'react-native';
+import { Image, useWindowDimensions, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/core';
 import { COMMENTS_QUERY } from '../query';
@@ -62,11 +63,13 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const [imageHeight, setImageHeight] = useState(300);
   const [moreComment, setMoreComment] = useState(false);
 
-  useEffect(() => {
-    Image.getSize(file, (width, height) => {
-      setImageHeight(height / 5);
-    });
-  }, [file]);
+  // useEffect(() => {
+  //   Image.getSize(file, () => {
+  //     setImageHeight(height / 2);
+  //   });
+  // }, [file]);
+
+  console.log(id, caption, file, isLiked, likes);
 
   const updateToggleLike = (cache, result) => {
     const {
@@ -119,11 +122,11 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     navigation.navigate('Likes', { photoId: id });
   };
 
-  const { data: commentsData } = useQuery(COMMENTS_QUERY, {
-    variables: {
-      id,
-    },
-  });
+  // const { data: commentsData } = useQuery(COMMENTS_QUERY, {
+  //   variables: {
+  //     id,
+  //   },
+  // });
 
   const moreComments = () => setMoreComment(!moreComment);
   const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
@@ -134,12 +137,12 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         <UserAvatar resizeMode="cover" source={{ uri: user?.avatar }} />
         <Username>{user?.username}</Username>
       </Header>
-      {/* <File
+      <File
         resizeMode="contain"
         style={{ width, height: imageHeight }}
         source={{ uri: file }}
-      /> */}
-      {/* <ExtraContainer>
+      />
+      <ExtraContainer>
         <Actions>
           <Action onPress={toggleLikeMutation}>
             <Ionicons
@@ -164,22 +167,22 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         <Caption>
           <TouchableOpacity onPress={moreComments}>
             <CaptionText>
-              {commentsData?.seePhotoComments?.length > 0
+              {/* {commentsData?.seePhotoComments?.length > 0
                 ? moreComment
                   ? '숨기기'
                   : '더 보기'
-                : null}
+                : null} */}
             </CaptionText>
           </TouchableOpacity>
         </Caption>
-        {moreComment ? (
+        {/* {moreComment ? (
           <FlatList
             data={commentsData?.seePhotoComments}
             keyExtractor={(comment) => '' + comment.id}
             renderItem={renderComment}
           />
-        ) : null}
-      </ExtraContainer> */}
+        ) : null} */}
+      </ExtraContainer>
     </Container>
   );
 };
