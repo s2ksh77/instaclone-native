@@ -77,13 +77,7 @@ const Search = ({ photoData, userData }) => {
   const { width } = useWindowDimensions();
 
   const renderItem = ({ item: photo }) => (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('Photo', {
-          photoId: photo.id,
-        })
-      }
-    >
+    <TouchableOpacity onPress={() => alert('시발')}>
       <Image
         source={{ uri: photo.file }}
         style={{ width: width / nubColumns, height: 100 }}
