@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "instaclone-native",
+    "name": "뚜뚜또또",
     "slug": "instaclone-native",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/appstore.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
@@ -23,10 +23,6 @@
       "buildNumber": "1.0.3"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
       "package": "com.dune.soostaclone",
       "versionCode": 4
     },
