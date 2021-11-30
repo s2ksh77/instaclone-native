@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/core';
 import { COMMENTS_QUERY } from '../query';
-import CommentRow from './CommentRow';
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -61,7 +60,6 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
   const [imageHeight, setImageHeight] = useState(300);
-  const [moreComment, setMoreComment] = useState(false);
 
   useEffect(() => {
     Image.getSize(file, () => {
@@ -120,14 +118,11 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     navigation.navigate('Likes', { photoId: id });
   };
 
-  const { data: commentsData, loading: commentsLoading } = useQuery(COMMENTS_QUERY, {
+  const { data: commentsData } = useQuery(COMMENTS_QUERY, {
     variables: {
       id,
     },
   });
-
-  const moreComments = () => setMoreComment(!moreComment);
-  const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
 
   return (
     <Container>
@@ -163,23 +158,12 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
           <CaptionText>{caption ? caption : ''}</CaptionText>
         </Caption>
         <Caption>
-          <TouchableOpacity onPress={moreComments}>
+          <TouchableOpacity onPress={goToComments}>
             <CaptionText>
-              {commentsData?.seePhotoComments?.length > 0
-                ? moreComment
-                  ? '숨기기'
-                  : '더 보기'
-                : null}
+              {commentsData?.seePhotoComments?.length > 0 ? '더 보기' : null}
             </CaptionText>
           </TouchableOpacity>
         </Caption>
-        {moreComment && commentsData?.seePhotoComments?.length > 0 ? (
-          <FlatList
-            data={commentsData?.seePhotoComments}
-            keyExtractor={(comment) => '' + comment.id}
-            renderItem={renderComment}
-          />
-        ) : null}
       </ExtraContainer>
     </Container>
   );
