@@ -63,11 +63,11 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const [imageHeight, setImageHeight] = useState(300);
   const [moreComment, setMoreComment] = useState(false);
 
-  // useEffect(() => {
-  //   Image.getSize(file, () => {
-  //     setImageHeight(height / 2);
-  //   });
-  // }, [file]);
+  useEffect(() => {
+    Image.getSize(file, () => {
+      setImageHeight(height / 2);
+    });
+  }, [file]);
 
   console.log(id, caption, file, isLiked, likes);
 
@@ -122,14 +122,14 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
     navigation.navigate('Likes', { photoId: id });
   };
 
-  const { data: commentsData } = useQuery(COMMENTS_QUERY, {
-    variables: {
-      id,
-    },
-  });
+  // const { data: commentsData, loading: commentsLoading } = useQuery(COMMENTS_QUERY, {
+  //   variables: {
+  //     id,
+  //   },
+  // });
 
-  const moreComments = () => setMoreComment(!moreComment);
-  const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
+  // const moreComments = () => setMoreComment(!moreComment);
+  // const renderComment = ({ item: comment }) => <CommentRow {...comment} />;
 
   return (
     <Container>
@@ -164,7 +164,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
           </TouchableOpacity>
           <CaptionText>{caption ? caption : ''}</CaptionText>
         </Caption>
-        <Caption>
+        {/* <Caption>
           <TouchableOpacity onPress={moreComments}>
             <CaptionText>
               {commentsData?.seePhotoComments?.length > 0
@@ -181,7 +181,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
             keyExtractor={(comment) => '' + comment.id}
             renderItem={renderComment}
           />
-        ) : null}
+        ) : null} */}
       </ExtraContainer>
     </Container>
   );

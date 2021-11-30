@@ -107,9 +107,7 @@ const Search = ({ navigation }) => {
   });
 
   const goToPhoto = (photo) => {
-    navigation.navigate('Photo', {
-      photoId: photo.id,
-    });
+    navigation.navigate('Photo', { photoId: photo?.id });
   };
 
   const renderItem = ({ item: photo }) => (
