@@ -76,12 +76,14 @@ const Search = ({ photoData, userData }) => {
   const nubColumns = 4;
   const { width } = useWindowDimensions();
 
-  const goToPhoto = (photo) => {
-    navigation.navigate('Photo', { photoId: photo?.id });
-  };
-
   const renderItem = ({ item: photo }) => (
-    <TouchableOpacity onPress={() => goToPhoto(photo)}>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('Photo', {
+          photoId: photo.id,
+        })
+      }
+    >
       <Image
         source={{ uri: photo.file }}
         style={{ width: width / nubColumns, height: 100 }}
