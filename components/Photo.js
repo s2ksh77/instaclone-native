@@ -64,7 +64,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
   const [moreComment, setMoreComment] = useState(false);
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      setImageHeight((height * Swidth) / width);
+      setImageHeight(height / 3);
     });
   }, [file]);
 
@@ -92,7 +92,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
       });
     }
   };
-  const [toggleLikeMutation, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
+  const [toggleLikeMutation] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
       id,
     },
