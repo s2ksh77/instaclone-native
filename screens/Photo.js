@@ -1,10 +1,10 @@
-import React from 'react';
-import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { gql, useQuery } from '@apollo/client';
-import { PHOTO_FRAGMENT } from '../fragments';
+import React, { useState } from 'react';
+import { RefreshControl, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import Photo from '../components/Photo';
 import ScreenLayout from '../components/ScreenLayout';
-import { useState } from 'react/cjs/react.development';
+import { PHOTO_FRAGMENT } from '../fragments';
 
 const SEE_PHOTO = gql`
   query seePhoto($id: Int!) {
@@ -27,22 +27,19 @@ export default function PhotoScreen({ route }) {
       id: route?.params?.photoId,
     },
   });
-  alert(route?.params?.photoId);
-  const [refresing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState();
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
     setRefreshing(false);
   };
-
   return (
     <ScreenLayout loading={loading}>
       <ScrollView
-        refreshControl={<RefreshControl refreshing={refresing} onRefresh={onRefresh} />}
+        refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={refreshing} />}
         style={{ backgroundColor: 'black' }}
         contentContainerStyle={{
           backgroundColor: 'black',
-          flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
         }}
