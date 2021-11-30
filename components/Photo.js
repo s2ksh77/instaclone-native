@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
-import { FlatList, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Image, useWindowDimensions } from 'react-native';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/core';
 import { COMMENTS_QUERY } from '../query';
@@ -65,7 +64,7 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
 
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      setImageHeight(height / 4);
+      setImageHeight(height / 5);
     });
   }, [file]);
 
@@ -135,11 +134,11 @@ const Photo = ({ id, user, caption, file, isLiked, likes }) => {
         <UserAvatar resizeMode="cover" source={{ uri: user?.avatar }} />
         <Username>{user?.username}</Username>
       </Header>
-      <File
+      {/* <File
         resizeMode="contain"
         style={{ width, height: imageHeight }}
         source={{ uri: file }}
-      />
+      /> */}
       {/* <ExtraContainer>
         <Actions>
           <Action onPress={toggleLikeMutation}>
