@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
-import { Image, useWindowDimensions, TouchableOpacity } from 'react-native';
+import { Image, useWindowDimensions, TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { useNavigation } from '@react-navigation/core';
