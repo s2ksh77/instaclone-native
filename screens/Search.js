@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -15,6 +16,7 @@ import DismissKeyboard from '../components/DismissKeyboard';
 import { gql, useLazyQuery } from '@apollo/client';
 import { USER_FRAGMENT } from '../fragments';
 import UserRow from '../components/UserRow';
+import Search from '../components/Search';
 
 const Input = styled.TextInput`
   background-color: rgba(255, 255, 255, 1);
@@ -53,8 +55,7 @@ const SEARCH_USERS = gql`
   ${USER_FRAGMENT}
 `;
 
-const Search = ({ navigation }) => {
-  const nubColumns = 4;
+export default function SearchScreen({ navigation }) {
   const { width } = useWindowDimensions();
   const { register, setValue, watch, handleSubmit } = useForm();
   const onCompleted = () => setValue('keyword', '');
@@ -104,22 +105,7 @@ const Search = ({ navigation }) => {
       minLength: 1,
       setValueAs: null,
     });
-  });
-
-  const goToPhoto = (photo) => {
-    navigation.navigate('Photo', { photoId: photo?.id });
-  };
-
-  const renderItem = ({ item: photo }) => (
-    <TouchableOpacity onPress={() => goToPhoto(photo)}>
-      <Image
-        source={{ uri: photo.file }}
-        style={{ width: width / nubColumns, height: 100 }}
-      />
-    </TouchableOpacity>
-  );
-
-  const renderUserItem = ({ item: user }) => <UserRow {...user} />;
+  }, []);
 
   return (
     <DismissKeyboard>
@@ -140,34 +126,10 @@ const Search = ({ navigation }) => {
             <MessageText>검색 하세요.</MessageText>
           </MessageContainer>
         ) : null}
-        {userData?.searchUsers !== undefined ? (
-          userData?.searchUsers?.length === 0 ? null : (
-            <View
-              style={{
-                flex: 0,
-                backgroundColor: 'black',
-              }}
-            >
-              <FlatList
-                data={userData?.searchUsers}
-                keyExtractor={(user) => '' + user.id}
-                renderItem={renderUserItem}
-              />
-            </View>
-          )
-        ) : null}
-        {data?.searchPhotos !== undefined ? (
-          data?.searchPhotos?.length === 0 ? null : (
-            <FlatList
-              numColumns={nubColumns}
-              data={data?.searchPhotos}
-              keyExtractor={(photo) => '' + photo.id}
-              renderItem={renderItem}
-            />
-          )
-        ) : null}
+        <ScrollView>
+          <Search photoData={data?.searchPhotos} userData={userData?.searchUsers} />
+        </ScrollView>
       </View>
     </DismissKeyboard>
   );
-};
-export default Search;
+}

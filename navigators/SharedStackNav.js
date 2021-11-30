@@ -8,6 +8,7 @@ import Me from '../screens/Me';
 import Notifications from '../screens/Notifications';
 import PhotoScreen from '../screens/Photo';
 import ProfileScreen from '../screens/Profile';
+import SearchScreen from '../screens/Search';
 import Search from '../screens/Search';
 
 const Stack = createStackNavigator();
@@ -15,7 +16,6 @@ const Stack = createStackNavigator();
 const SharedStackNav = ({ screenName }) => {
   return (
     <Stack.Navigator
-      headerMode="screen"
       screenOptions={{
         headerBackTitleVisible: false,
         headerTintColor: 'white',
@@ -23,6 +23,7 @@ const SharedStackNav = ({ screenName }) => {
           backgroundColor: 'black',
           shadowColor: 'rgba(255,255,255, 0.3)',
         },
+        headerMode: 'screen',
       }}
     >
       {screenName === 'Feed' ? (
@@ -46,7 +47,7 @@ const SharedStackNav = ({ screenName }) => {
         />
       ) : null}
       {screenName === 'Search' ? (
-        <Stack.Screen name={'Search'} component={Search} />
+        <Stack.Screen name={'Search'} component={SearchScreen} />
       ) : null}
       {screenName === 'Notifications' ? (
         <Stack.Screen name={'Notifications'} component={Notifications} />
